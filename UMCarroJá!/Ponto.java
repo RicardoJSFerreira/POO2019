@@ -5,12 +5,12 @@ import java.io.Serializable;
  * herde to tipo Number. Todos os valores são convertidos para double,
  * após calculos. 
  */
-
+// Acho que classe ponto vai ser com ints e nao é necessario ser um T extends Number
 public class Ponto<T extends Number> implements Serializable{
-    
+
     private T x;
     private T y;
-    
+
     /*
      * Construtor principal para objetos da classe Ponto
      */
@@ -77,10 +77,10 @@ public class Ponto<T extends Number> implements Serializable{
 
         return Math.sqrt( Math.pow(dX, 2) + Math.pow(dY, 2) );
     }
-    
+
     @Override
     public String toString() {
         return "x: " + this.x + ", "
-         + "y: " + this.y; 
+                + "y: " + this.y;
     }
 }

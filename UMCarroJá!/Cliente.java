@@ -1,49 +1,49 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Map;
-import java.util.Iterator;
 import java.io.Serializable;
+import java.util.ArrayList;
 
-/**
- * Classe que é subclasse de Utilizador, e que
- * guarda a informação específica ao cliente.
- */
+public class Cliente extends User implements Serializable {
+    private Ponto posicao; // Perguntar se subclasses sao protected ou podem ser private
+    private ArrayList<String> historico = new ArrayList<String>(); // ainda nao sei como vamos representar o historico
 
-public class Cliente extends Utilizador implements Serializable{
-    private Ponto posicao;
-    protected ArrayList<String> historico = new ArrayList<String>();
-    
-    public Cliente(String newEmail, String newNome, String newPassword, String newMorada, String newDataNascimento, double newPosX, double newPosY) {
-        this.email = newEmail;
-        this.nome = newNome;
-        this.password = newPassword;
-        this.morada = newMorada;
-        this.dataNascimento = newDataNascimento;
-        this.posicao = new Ponto<Double>(newPosX, newPosY);
+    public Cliente() {
+        super();
+        this.posicao = new Ponto(0,0);
+        this.historico = new ArrayList<String>();
     }
 
-    /**
-      * Obter a posição do cliente
-      */
-    public Ponto getPosition() {
+    public Cliente(String email, String nome, String password, String morada, String dataNascimento, double newPosX,double newPosY, ArrayList<String> historico) {
+        super(email, nome, password, morada, dataNascimento);
+        this.posicao = new Ponto<Double>(newPosX, newPosY); // Se recebo um ponto faço logo this.posicao = posicao que recebo
+        this.historico = historico;
+    }
+
+
+    public Cliente(Cliente umCliente) {
+        super(umCliente);
+        this.posicao = umCliente.getPosicao();
+        this.historico = umCliente.getHistorico();
+    }
+
+
+    public Ponto getPosicao() {
         return this.posicao;
     }
 
-    /**
-      * Definir a posição do cliente
-      */
-    public void setPosition(Ponto newPos) {
-        this.posicao = newPos;
+    public void setPosicao(Ponto posicao) {
+        this.posicao = posicao;
     }
-    
-    @Override
-    public String toString() {
-        return "<html>Email: " + this.email
-             + "<br>Nome: " + this.nome
-             + "<br>Password: " + this.password
-             + "<br>Morada: " + this.morada
-             + "<br>Data Nascimento " + this.dataNascimento
-             + "<br>Localização: " + this.posicao;
+
+
+    public ArrayList<String> getHistorico() {
+        ArrayList<String> r = new ArrayList<String>();
+        for(String s: this.historico)
+            r.add(s);
+        return r;
+    }
+
+    public void setHistorico(ArrayList<String> historico) {
+        this.historico=new ArrayList<String>();
+        for(String s: historico)
+            this.historico.add(s);
     }
 }
