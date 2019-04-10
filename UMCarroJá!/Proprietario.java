@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Proprietario extends User{
     private int classificacao;
@@ -41,5 +42,26 @@ public class Proprietario extends User{
         this.historico=new ArrayList<String>();
         for(String s: historico)
             this.historico.add(s);
+    }
+
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Proprietario)) return false;
+        if (!super.equals(o)) return false;
+        Proprietario that = (Proprietario) o;
+        return getClassificacao() == that.getClassificacao() &&
+                Objects.equals(getHistorico(), that.getHistorico());
+    }
+
+    @Override
+    public String toString() {
+        return "Proprietario{" +
+                "classificacao=" + classificacao +
+                ", historico=" + historico +
+                '}';
+    }
+    public Proprietario clone() {
+        return new Proprietario(this);
     }
 }

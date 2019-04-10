@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Cliente extends User implements Serializable {
     private Ponto posicao; // Perguntar se subclasses sao protected ou podem ser private
@@ -45,5 +46,26 @@ public class Cliente extends User implements Serializable {
         this.historico=new ArrayList<String>();
         for(String s: historico)
             this.historico.add(s);
+    }
+
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cliente)) return false;
+        if (!super.equals(o)) return false;
+        Cliente cliente = (Cliente) o;
+        return Objects.equals(getPosicao(), cliente.getPosicao()) &&
+                Objects.equals(getHistorico(), cliente.getHistorico());
+    }
+
+
+    public String toString() {
+        return "Cliente{" +
+                "posicao=" + posicao +
+                ", historico=" + historico + // Confirmar se historico pode ser assim
+                '}';
+    }
+    public Cliente clone() {
+        return new Cliente(this);
     }
 }

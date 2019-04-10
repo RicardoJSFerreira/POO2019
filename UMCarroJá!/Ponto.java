@@ -1,4 +1,6 @@
 import java.io.Serializable;
+import java.util.Objects;
+
 /**
  * Classe genérica que representa um ponto.
  * Pode ser instanciada com valores de qualquer tipo que
@@ -82,5 +84,18 @@ public class Ponto<T extends Number> implements Serializable{
     public String toString() {
         return "x: " + this.x + ", "
                 + "y: " + this.y;
+    }
+
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Ponto)) return false;
+        Ponto<?> ponto = (Ponto<?>) o;
+        return Objects.equals(getX(), ponto.getX()) &&
+                Objects.equals(getY(), ponto.getY());
+    }
+
+    public Ponto clone() {
+        return new Ponto(this);
     }
 }
