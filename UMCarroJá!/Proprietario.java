@@ -1,26 +1,27 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Proprietario extends User{
     private int classificacao;
-    private ArrayList<String> historico = new ArrayList<String>(); // ainda nao sei como vamos representar o historico
+    private List<Veiculo> veiculos;
 
     public Proprietario() {
         super();
         this.classificacao = 0;
-        this.historico = new ArrayList<String>();
+        this.veiculos = new ArrayList<>();
     }
 
-    public Proprietario(String email, String nome, String password, String morada, String dataNascimento, int classificacao, ArrayList<String> historico) {
-        super(email, nome, password, morada, dataNascimento);
+    public Proprietario(int idUser, String email, String nome, String password, String morada, String dataNascimento, int classificacao) {
+        super(idUser,email, nome, password, morada, dataNascimento);
         this.classificacao = classificacao;
-        this.historico = historico;
+        this.veiculos = new ArrayList<>();
     }
 
     public Proprietario(Proprietario umProprietario) {
         super(umProprietario);
         this.classificacao = umProprietario.getClassificacao();
-        this.historico = umProprietario.getHistorico();
+
     }
 
     public int getClassificacao() {
@@ -31,34 +32,19 @@ public class Proprietario extends User{
         this.classificacao = classificacao;
     }
 
-    public ArrayList<String> getHistorico() {
-        ArrayList<String> r = new ArrayList<String>();
-        for(String s: this.historico)
-            r.add(s);
-        return r;
-    }
-
-    public void setHistorico(ArrayList<String> historico) {
-        this.historico=new ArrayList<String>();
-        for(String s: historico)
-            this.historico.add(s);
-    }
-
-
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Proprietario)) return false;
         if (!super.equals(o)) return false;
         Proprietario that = (Proprietario) o;
-        return getClassificacao() == that.getClassificacao() &&
-                Objects.equals(getHistorico(), that.getHistorico());
+        return getClassificacao() == that.getClassificacao();
     }
 
     @Override
     public String toString() {
-        return "Proprietario{" +
+        return
+                super.toString()+"Proprietario{" +
                 "classificacao=" + classificacao +
-                ", historico=" + historico +
                 '}';
     }
     public Proprietario clone() {

@@ -6,7 +6,8 @@ import java.util.Objects;
  * O utilizador tem email, nome, password, morada e data de nascimento.
  */
 
-public abstract class User { // Perguntar se deve ser abstract e se atributos devem ser protected ou private
+public abstract class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract tenho de definir metodos nas subclasses penso eu, tenho d eir ver
+    private  int idUser;
     private String email;
     private String nome;
     private String password;
@@ -14,13 +15,15 @@ public abstract class User { // Perguntar se deve ser abstract e se atributos de
     private String dataNascimento;
 
     public User() {
+        this.idUser = -1;
         this.email = "";
         this.nome = "";
         this.password = "";
         this.morada = "";
         this.dataNascimento = "";
     }
-    public User(String email, String nome, String password, String morada, String dataNascimento) {
+    public User(int idUser, String email, String nome, String password, String morada, String dataNascimento) {
+        this.idUser = idUser;
         this.email = email;
         this.nome = nome;
         this.password = password;
@@ -28,11 +31,20 @@ public abstract class User { // Perguntar se deve ser abstract e se atributos de
         this.dataNascimento = dataNascimento;
     }
     public User(User umUser){
+        this.idUser = umUser.getIdUser();
         this.email = umUser.getEmail();
         this.nome = umUser.getNome();
         this.password = umUser.getPassword();
         this.morada = umUser.getMorada();
         this.dataNascimento = umUser.getDataNascimento();
+    }
+
+    public int getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
     }
 
     public String getEmail() {
@@ -75,26 +87,29 @@ public abstract class User { // Perguntar se deve ser abstract e se atributos de
         this.dataNascimento = dataNascimento;
     }
 
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
-        User that = (User) o;
-        return Objects.equals(getEmail(), that.getEmail()) &&
-                Objects.equals(getNome(), that.getNome()) &&
-                Objects.equals(getPassword(), that.getPassword()) &&
-                Objects.equals(getMorada(), that.getMorada()) &&
-                Objects.equals(getDataNascimento(), that.getDataNascimento());
+        User user = (User) o;
+        return getIdUser() == user.getIdUser() &&
+                Objects.equals(getEmail(), user.getEmail()) &&
+                Objects.equals(getNome(), user.getNome()) &&
+                Objects.equals(getPassword(), user.getPassword()) &&
+                Objects.equals(getMorada(), user.getMorada()) &&
+                Objects.equals(getDataNascimento(), user.getDataNascimento());
     }
 
 
+
     public String toString() {
-        return "Utilizador{" +
-                "email='" + email + '\'' +
+        return "User{" +
+                "idUser=" + idUser +
+                ", email='" + email + '\'' +
                 ", nome='" + nome + '\'' +
                 ", password='" + password + '\'' +
                 ", morada='" + morada + '\'' +
                 ", dataNascimento='" + dataNascimento + '\'' +
                 '}';
     }
-
 }

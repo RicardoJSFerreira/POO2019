@@ -5,54 +5,69 @@ import java.util.Objects;
  * Classe genérica que representa um veículo.
  */
 
-public class Veiculo{
-    
+public class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n tenho a certwza
+    private int id; // tenho de ter um idVeiculo para saber qual deles é alugado
     private String tipo;
+    private boolean disponivel;
     private double velocidadeMed;
     private double precoPorKm;
     private double consumoPorKm;
     private int classificacao;
-    private int autonomia; //um inteiro que representa a percentagem?
+    private int autonomiaMax;
+    private int autonomia;
     private Ponto posicao;
-    private ArrayList<String> historico = new ArrayList<String>();
+
 
     /**
      * Construtor para objetos da classe Veiculo
      */
     public Veiculo(){
+        this.id = -1;
         this.tipo = "";
+        this.disponivel = false;
         this.velocidadeMed = 0.0;
         this.precoPorKm = 0.0;
         this.consumoPorKm = 0.0;
         this.classificacao = 0;
         this.autonomia = 0;
         this.posicao = new Ponto(0,0);
-        this.historico = new ArrayList<String>();
     }
     
-    public Veiculo (String tipo, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomia, double newPosX,
-                    double newPosY, ArrayList<String> historico){
+    public Veiculo (int id, String tipo, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
+                    double newPosY){
+        this.id = id;
         this.tipo = tipo;
+        this.disponivel = false;
         this.velocidadeMed = velocidadeMed;
         this.precoPorKm = precoPorKm;
         this.consumoPorKm = consumoPorKm;
         this.classificacao = classificacao;
+        this.autonomiaMax = autonomiaMax;
         this.autonomia = autonomia;
         this.posicao = new Ponto<Double>(newPosX, newPosY);
-        this.historico = historico;
     }
     
     public Veiculo (Veiculo umVeiculo){
+        this.id = umVeiculo.getId();
         this.tipo = umVeiculo.getTipo();
+        this.disponivel = umVeiculo.getDisponivel();
         this.velocidadeMed = umVeiculo.getVelocidadeMed();
         this.precoPorKm = umVeiculo.getPrecoPorKm();
         this.consumoPorKm = umVeiculo.getConsumoPorKm();
         this.classificacao = umVeiculo.getClassificacao();
+        this.autonomiaMax = umVeiculo.getAutonomiaMax();
         this.autonomia = umVeiculo.getAutonomia();
         this.posicao = umVeiculo.getPosicao();
-        this.historico = umVeiculo.getHistorico();
     }
-    
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) { // meter a fazer +1 em relaçao ao anterior
+        this.id = id;
+    }
+
     public String getTipo(){
         return this.tipo;
     }
@@ -60,7 +75,15 @@ public class Veiculo{
     public void setTipo(String tipo){
         this.tipo = tipo;
     }
-    
+
+    public boolean getDisponivel() {
+        return disponivel;
+    }
+
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
+    }
+
     public double getVelocidadeMed(){
         return this.velocidadeMed;
     }
@@ -92,7 +115,15 @@ public class Veiculo{
     public void setClassificacao(int classificacao) {
         this.classificacao = classificacao;
     }
-    
+
+    public int getAutonomiaMax() {
+        return autonomiaMax;
+    }
+
+    public void setAutonomiaMax(int autonomiaMax) {
+        this.autonomiaMax = autonomiaMax;
+    }
+
     public int getAutonomia() {
         return autonomia;
     }
@@ -108,50 +139,38 @@ public class Veiculo{
     public void setPosicao(Ponto posicao) {
         this.posicao = posicao;
     }
-    
-    public ArrayList<String> getHistorico() {
-        ArrayList<String> r = new ArrayList<String>();
-        for(String s: this.historico)
-            r.add(s);
-        return r;
-    }
 
-    public void setHistorico(ArrayList<String> historico) {
-        this.historico=new ArrayList<String>();
-        for(String s: historico)
-            this.historico.add(s);
-    }
-    
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Cliente)) return false;
-        if (!super.equals(o)) return false;
-        Veiculo v = (Veiculo) o;
-        return Objects.equals(getTipo(), v.getTipo()) &&
-               getVelocidadeMed() == v.getVelocidadeMed() &&
-               getPrecoPorKm() == v.getPrecoPorKm() &&
-               getConsumoPorKm() == v.getConsumoPorKm() &&
-               getClassificacao() == v.getClassificacao() &&
-               getAutonomia() == v.getAutonomia() &&
-               Objects.equals(getPosicao(), v.getPosicao()) &&
-               Objects.equals(getHistorico(), v.getHistorico());
-    
+        if (!(o instanceof Veiculo)) return false;
+        Veiculo veiculo = (Veiculo) o;
+        return getDisponivel() == veiculo.getDisponivel() &&
+                Double.compare(veiculo.getVelocidadeMed(), getVelocidadeMed()) == 0 &&
+                Double.compare(veiculo.getPrecoPorKm(), getPrecoPorKm()) == 0 &&
+                Double.compare(veiculo.getConsumoPorKm(), getConsumoPorKm()) == 0 &&
+                getClassificacao() == veiculo.getClassificacao() &&
+                getAutonomiaMax() == veiculo.getAutonomiaMax() &&
+                getAutonomia() == veiculo.getAutonomia() &&
+                Objects.equals(getTipo(), veiculo.getTipo()) &&
+                Objects.equals(getPosicao(), veiculo.getPosicao());
     }
-    
+
     @Override
     public String toString() {
-        return "Veículo{" +
-               "Tipo = " + tipo +
-               ", Velocidade média por Km = " + velocidadeMed +
-               ", Preço por Km = " + precoPorKm +
-               ", Consumo por Km = " + consumoPorKm +
-               ", Classificação = " + classificacao +
-               ", Autonomia (%) = " + autonomia +
-               ", Posição = " + posicao +
-               ", Histórico = " + historico +
-               "}";
+        return "Veiculo{" +
+                "tipo='" + tipo + '\'' +
+                ", disponivel=" + disponivel +
+                ", velocidadeMed=" + velocidadeMed +
+                ", precoPorKm=" + precoPorKm +
+                ", consumoPorKm=" + consumoPorKm +
+                ", classificacao=" + classificacao +
+                ", autonomiaMax=" + autonomiaMax +
+                ", autonomia=" + autonomia +
+                ", posicao=" + posicao +
+                '}';
     }
-    
+
     public Veiculo clone() {
         return new Veiculo(this);
     }
