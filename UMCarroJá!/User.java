@@ -5,8 +5,11 @@ import java.util.Objects;
  * proprietário. Aqui constam as informações em comum.
  * O utilizador tem email, nome, password, morada e data de nascimento.
  */
+// Teoricamente esta classe deve ser abstract pois nao pode ser iterada, a pergunta é,
+// para ter uma class de todos os users se fizer Users.clone fico com todos os proprietarios e todos os clientes tambem?
+// E faz sentido fazer isto assim?
 
-public abstract class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract tenho de definir metodos nas subclasses penso eu, tenho d eir ver
+public class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract tenho de definir metodos nas subclasses penso eu, tenho d eir ver
     private  int idUser;
     private String email;
     private String nome;
@@ -111,5 +114,9 @@ public abstract class User { // Perguntar se deve ser abstract ou nao  -> Se for
                 ", morada='" + morada + '\'' +
                 ", dataNascimento='" + dataNascimento + '\'' +
                 '}';
+    }
+
+    public User clone() {
+        return new User(this);
     }
 }

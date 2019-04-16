@@ -1,3 +1,4 @@
+import java.sql.Time;
 import java.util.Date;
 import java.util.Objects;
 
@@ -12,8 +13,8 @@ public class Historico extends Pedido {
         this.dataViagem = new Date();
     }
 
-    public Historico(int idPedido, int idCliente, int idProprietario, int idVeiculo, int valorPago, Date dataViagem) {
-        super(idPedido, idCliente, idProprietario, idVeiculo);
+    public Historico(int idPedido, int idCliente, int idProprietario, int idVeiculo, double newPosX, double newPosY, Time tempoQueDemora, int valorPago, Date dataViagem) {
+        super(idPedido, idCliente, idProprietario, idVeiculo, newPosX, newPosY, tempoQueDemora);
         this.valorPago = valorPago;
         this.dataViagem = dataViagem;
     }

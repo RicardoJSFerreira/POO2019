@@ -9,13 +9,13 @@ public class Proprietario extends User{
     public Proprietario() {
         super();
         this.classificacao = 0;
-        this.veiculos = new ArrayList<>();
+        this.veiculos = new ArrayList<Veiculo>();
     }
 
     public Proprietario(int idUser, String email, String nome, String password, String morada, String dataNascimento, int classificacao) {
         super(idUser,email, nome, password, morada, dataNascimento);
         this.classificacao = classificacao;
-        this.veiculos = new ArrayList<>();
+        this.veiculos = new ArrayList<Veiculo>();
     }
 
     public Proprietario(Proprietario umProprietario) {
@@ -30,6 +30,21 @@ public class Proprietario extends User{
 
     public void setClassificacao(int classificacao) {
         this.classificacao = classificacao;
+    }
+
+    public List<Veiculo> getVeiculos() {
+            List<Veiculo> res = new ArrayList<>();
+            for(Veiculo s : veiculos) {
+                res.add(s);
+            }
+            return res;
+    }
+
+    public void setVeiculos(List<Veiculo> veiculos) {
+            this.veiculos = new ArrayList<Veiculo>();
+            for(Veiculo s : veiculos) {
+                this.veiculos.add(s);
+            }
     }
 
     public boolean equals(Object o) {

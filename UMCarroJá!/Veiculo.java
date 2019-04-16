@@ -7,7 +7,6 @@ import java.util.Objects;
 
 public class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n tenho a certwza
     private int id; // tenho de ter um idVeiculo para saber qual deles é alugado
-    private String tipo;
     private boolean disponivel;
     private double velocidadeMed;
     private double precoPorKm;
@@ -23,7 +22,6 @@ public class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n 
      */
     public Veiculo(){
         this.id = -1;
-        this.tipo = "";
         this.disponivel = false;
         this.velocidadeMed = 0.0;
         this.precoPorKm = 0.0;
@@ -33,10 +31,9 @@ public class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n 
         this.posicao = new Ponto(0,0);
     }
     
-    public Veiculo (int id, String tipo, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
+    public Veiculo (int id, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
                     double newPosY){
         this.id = id;
-        this.tipo = tipo;
         this.disponivel = false;
         this.velocidadeMed = velocidadeMed;
         this.precoPorKm = precoPorKm;
@@ -49,7 +46,6 @@ public class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n 
     
     public Veiculo (Veiculo umVeiculo){
         this.id = umVeiculo.getId();
-        this.tipo = umVeiculo.getTipo();
         this.disponivel = umVeiculo.getDisponivel();
         this.velocidadeMed = umVeiculo.getVelocidadeMed();
         this.precoPorKm = umVeiculo.getPrecoPorKm();
@@ -66,14 +62,6 @@ public class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n 
 
     public void setId(int id) { // meter a fazer +1 em relaçao ao anterior
         this.id = id;
-    }
-
-    public String getTipo(){
-        return this.tipo;
-    }
-    
-    public void setTipo(String tipo){
-        this.tipo = tipo;
     }
 
     public boolean getDisponivel() {
@@ -152,14 +140,12 @@ public class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n 
                 getClassificacao() == veiculo.getClassificacao() &&
                 getAutonomiaMax() == veiculo.getAutonomiaMax() &&
                 getAutonomia() == veiculo.getAutonomia() &&
-                Objects.equals(getTipo(), veiculo.getTipo()) &&
                 Objects.equals(getPosicao(), veiculo.getPosicao());
     }
 
     @Override
     public String toString() {
         return "Veiculo{" +
-                "tipo='" + tipo + '\'' +
                 ", disponivel=" + disponivel +
                 ", velocidadeMed=" + velocidadeMed +
                 ", precoPorKm=" + precoPorKm +

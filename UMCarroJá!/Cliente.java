@@ -11,17 +11,20 @@ public class Cliente extends User implements Serializable {
     public Cliente() {
         super();
         this.posicao = new Ponto(0,0);
+        this.classificacao = -1;
     }
 
-    public Cliente(int idUser, String email, String nome, String password, String morada, String dataNascimento, double newPosX,double newPosY, ArrayList<String> historico) {
+    public Cliente(int idUser, String email, String nome, String password, String morada, String dataNascimento, double newPosX,double newPosY, int classificacao) {
         super(idUser,email, nome, password, morada, dataNascimento);
         this.posicao = new Ponto<Double>(newPosX, newPosY);
+        this.classificacao = classificacao;
     }
 
 // Construtor de copia de uma subclasse recebe a subclasse ou a classe principal?
     public Cliente(Cliente umCliente) { // Recebe um cliente ou um user ? Acho que é assim
         super(umCliente);
         this.posicao = umCliente.getPosicao();
+        this.classificacao = umCliente.getClassificacao();
     }
 
 
@@ -31,6 +34,14 @@ public class Cliente extends User implements Serializable {
 
     public void setPosicao(Ponto posicao) {
         this.posicao = posicao;
+    }
+
+    public int getClassificacao() {
+        return classificacao;
+    }
+
+    public void setClassificacao(int classificacao) {
+        this.classificacao = classificacao;
     }
 
     public boolean equals(Object o) {

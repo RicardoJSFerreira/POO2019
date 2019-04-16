@@ -17,20 +17,26 @@ public class Pedido implements Serializable {
         this.idCliente = -1;
         this.idProprietario = -1;
         this.idVeiculo = -1;
+        this.destino = new Ponto();
+        this.tempoQueDemora = new Time(0,0,0);
 
     }
 
-    public Pedido(int idPedido, int idCliente, int idProprietario, int idVeiculo){
+    public Pedido(int idPedido, int idCliente, int idProprietario, int idVeiculo, double newPosX, double newPosY, Time tempoQueDemora){
         this.idPedido = idPedido;
         this.idCliente = idCliente;
         this.idProprietario = idProprietario;
         this.idVeiculo = idVeiculo;
+        this.destino = new Ponto(newPosX,newPosY);
+        this.tempoQueDemora = tempoQueDemora;
     }
     public Pedido(Pedido umPedido){
         this.idPedido = umPedido.getIdPedido();
         this.idCliente = umPedido.getIdCliente();
         this.idProprietario = umPedido.getIdProprietario();
         this.idVeiculo = umPedido.getIdVeiculo();
+        this.destino = umPedido.getDestino();
+        this.tempoQueDemora = umPedido.getTempoQueDemora();
 
     }
 
@@ -64,6 +70,22 @@ public class Pedido implements Serializable {
 
     public void setIdVeiculo(int idVeiculo) {
         this.idVeiculo = idVeiculo;
+    }
+
+    public Ponto getDestino() {
+        return destino;
+    }
+
+    public void setDestino(Ponto destino) {
+        this.destino = destino;
+    }
+
+    public Time getTempoQueDemora() {
+        return tempoQueDemora;
+    }
+
+    public void setTempoQueDemora(Time tempoQueDemora) {
+        this.tempoQueDemora = tempoQueDemora;
     }
 
     public boolean equals(Object o) {
