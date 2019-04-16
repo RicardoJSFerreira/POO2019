@@ -34,7 +34,7 @@ public class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n 
     public Veiculo (int id, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
                     double newPosY){
         this.id = id;
-        this.disponivel = false;
+        this.disponivel = disponivel;
         this.velocidadeMed = velocidadeMed;
         this.precoPorKm = precoPorKm;
         this.consumoPorKm = consumoPorKm;
