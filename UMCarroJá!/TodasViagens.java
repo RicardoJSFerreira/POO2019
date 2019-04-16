@@ -2,7 +2,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TodasViagens {
-    private Map<Integer,Historico> todos; // Deverá ser de Historico ou Pedido?
+    private Map<Integer,Pedido> todos; // Deverá ser de Historico ou Pedido?
     // Se for Pedido consigo ter acesso ao historico?
     // Quero ter acesso ao historico e aos pedidos atraves daqui
 
@@ -10,29 +10,30 @@ public class TodasViagens {
         this.todos = new HashMap<>();
     }
 
-    public TodasViagens(Map<Integer, Historico> novos) {
+    public TodasViagens(Map<Integer, Pedido> novos) {
         this.todos = new HashMap<>();
-        for(Map.Entry<Integer,Historico> par:novos.entrySet()){
+        for(Map.Entry<Integer,Pedido> par:novos.entrySet()){
             this.todos.put(par.getKey(),(par.getValue()).clone());
         }
     }
     public TodasViagens(TodasViagens tv){
         this.todos = tv.getTodasViagens();
     }
-    public Historico getHistorico(int id){
-        for(Historico c : this.todos.values()){
+
+    public Pedido getPedido(int id){
+        for(Pedido c : this.todos.values()){
             if(c.getIdPedido() == id) return c.clone();
         }
         return null;
     }
-    public List<Historico> getViagens(){
-        List<Historico> res = new ArrayList<Historico>();
-        for(Historico c : this.todos.values())
+    public List<Pedido> getViagens(){
+        List<Pedido> res = new ArrayList<Pedido>();
+        for(Pedido c : this.todos.values())
             res.add(c.clone());
         return res;
     }
 
-    public Map<Integer,Historico> getTodasViagens() {
+    public Map<Integer,Pedido> getTodasViagens() {
         return this.todos.values().stream().
                 collect(Collectors.toMap((c) -> c.getIdPedido(),(c) -> c.clone()));
     }
@@ -55,7 +56,7 @@ public class TodasViagens {
     public TodasViagens clone() {
         return new TodasViagens(this);
     }
-    public void addViagem(Historico hist){
+    public void addViagem(Pedido hist){
         this.todos.put(hist.getIdPedido(), hist);
     }
 
