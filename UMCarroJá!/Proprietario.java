@@ -12,7 +12,7 @@ public class Proprietario extends User{
         this.veiculos = new ArrayList<Veiculo>();
     }
 
-    public Proprietario(int idUser, String email, String nome, String password, String morada, String dataNascimento, int classificacao) {
+    public Proprietario(int idUser, String email, String nome, String password, String morada, String dataNascimento, int classificacao, List<Veiculo> veiculos) {
         super(idUser,email, nome, password, morada, dataNascimento);
         this.classificacao = classificacao;
         this.veiculos = new ArrayList<Veiculo>();
