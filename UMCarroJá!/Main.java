@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Main extends Cliente implements Serializable {
+public class Main implements Serializable {
 
     public static void main() {
         
