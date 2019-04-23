@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 
 public class Cliente extends User implements Serializable {
@@ -14,10 +15,16 @@ public class Cliente extends User implements Serializable {
         this.classificacao = -1;
     }
 
-    public Cliente(int idUser, String email, String nome, String password, String morada, String dataNascimento, double newPosX,double newPosY, int classificacao) {
+    public Cliente(int idUser, String email, String nome, String password, String morada, Date dataNascimento, double newPosX, double newPosY, int classificacao) {
         super(idUser,email, nome, password, morada, dataNascimento);
         this.posicao = new Ponto<Double>(newPosX, newPosY);
         this.classificacao = classificacao;
+    }
+
+    public Cliente(int idUser, String email, String nome, String password, String morada, Date dataNascimento, double newPosX, double newPosY) {
+        super(idUser,email, nome, password, morada, dataNascimento);
+        this.posicao = new Ponto<Double>(newPosX, newPosY);
+        this.classificacao = -1;
     }
 
 // Construtor de copia de uma subclasse recebe a subclasse ou a classe principal?

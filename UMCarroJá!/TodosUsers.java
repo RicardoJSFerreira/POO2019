@@ -20,10 +20,17 @@ public class TodosUsers {
     }
     public User getUser(int id){
         for(User c : this.todos.values()){
-            if(c.getIdUser() == id) return c.clone();
+            if(c.getUserId() == id) return c.clone();
         }
         return null;
     }
+    public User getUserEmail(String email){
+        for(User c : this.todos.values()){
+            if(c.getEmail().equals(email)) return c.clone();
+        }
+        return null;
+    }
+
     public List<User> getUsers(){
         List<User> res = new ArrayList<User>();
         for(User c : this.todos.values())
@@ -33,7 +40,7 @@ public class TodosUsers {
 
     public Map<Integer,User> getTodosUsers() {
         return this.todos.values().stream().
-                collect(Collectors.toMap((c) -> c.getIdUser(),(c) -> c.clone()));
+                collect(Collectors.toMap((c) -> c.getUserId(),(c) -> c.clone()));
     }
 
     @Override
@@ -54,9 +61,12 @@ public class TodosUsers {
     public TodosUsers clone() {
         return new TodosUsers(this);
     }
+
     public void addUser(User user){
-        this.todos.put(user.getIdUser(), user);
+        this.todos.put(user.getUserId(), user);
     }
+
+
 
     public boolean containsKey_(Integer key){
         if(this.todos.containsKey(key)) return true;
@@ -67,4 +77,5 @@ public class TodosUsers {
         if(this.todos.containsValue(value)) return true;
         else return false;
     }
+
 }

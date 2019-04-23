@@ -3,7 +3,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Historico extends Pedido {
-    private int valorPago;
+    private int valorPago; // vai ter de ser calculado atraves da distancia percorrida e o preço/km
     private Date dataViagem;
 
 
@@ -23,6 +23,12 @@ public class Historico extends Pedido {
         super(umHistorico);
         this.valorPago = umHistorico.getValorPago();
         this.dataViagem = umHistorico.getDataViagem();
+    }
+
+    public Historico(Pedido umPedido, int valorPago, Date dataViagem) {
+        super(umPedido);
+        this.valorPago = valorPago;
+        this.dataViagem = dataViagem;
     }
 
     public int getValorPago() {

@@ -65,7 +65,7 @@ public class TodasViagens {
         else return false;
     }
 
-    public boolean containsValue_(User value){
+    public boolean containsValue_(Pedido value){
         if(this.todos.containsValue(value)) return true;
         else return false;
     }

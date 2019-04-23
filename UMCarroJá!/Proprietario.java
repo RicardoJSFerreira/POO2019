@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,15 +13,28 @@ public class Proprietario extends User{
         this.veiculos = new ArrayList<Veiculo>();
     }
 
-    public Proprietario(int idUser, String email, String nome, String password, String morada, String dataNascimento, int classificacao, List<Veiculo> veiculos) {
+    public Proprietario(int idUser, String email, String nome, String password, String morada, Date dataNascimento, int classificacao, ArrayList<Veiculo> listVeiculos ) {
         super(idUser,email, nome, password, morada, dataNascimento);
         this.classificacao = classificacao;
+        this.veiculos = new ArrayList<Veiculo>(listVeiculos);
+    }
+
+    public Proprietario(int idUser, String email, String nome, String password, String morada, Date dataNascimento) {
+        super(idUser,email, nome, password, morada, dataNascimento);
+        this.classificacao = -1;
         this.veiculos = new ArrayList<Veiculo>();
     }
 
     public Proprietario(Proprietario umProprietario) {
         super(umProprietario);
         this.classificacao = umProprietario.getClassificacao();
+        this.veiculos = umProprietario.getVeiculos();
+
+    }
+    public Proprietario(Proprietario umProprietario, Veiculo veiculo) {
+        super(umProprietario);
+        this.classificacao = umProprietario.getClassificacao();
+        this.veiculos = umProprietario.getVeiculos();
 
     }
 

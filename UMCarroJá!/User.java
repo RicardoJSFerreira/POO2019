@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -15,7 +16,7 @@ public class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract
     private String nome;
     private String password;
     private String morada;
-    private String dataNascimento;
+    private Date dataNascimento;
 
     public User() {
         this.idUser = -1;
@@ -23,9 +24,9 @@ public class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract
         this.nome = "";
         this.password = "";
         this.morada = "";
-        this.dataNascimento = "";
+        this.dataNascimento = new Date();
     }
-    public User(int idUser, String email, String nome, String password, String morada, String dataNascimento) {
+    public User(int idUser, String email, String nome, String password, String morada, Date dataNascimento) {
         this.idUser = idUser;
         this.email = email;
         this.nome = nome;
@@ -34,7 +35,7 @@ public class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract
         this.dataNascimento = dataNascimento;
     }
     public User(User umUser){
-        this.idUser = umUser.getIdUser();
+        this.idUser = umUser.getUserId();
         this.email = umUser.getEmail();
         this.nome = umUser.getNome();
         this.password = umUser.getPassword();
@@ -42,11 +43,11 @@ public class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract
         this.dataNascimento = umUser.getDataNascimento();
     }
 
-    public int getIdUser() {
+    public int getUserId() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setUserId(int idUser) {
         this.idUser = idUser;
     }
 
@@ -82,27 +83,27 @@ public class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract
         this.morada = morada;
     }
 
-    public String getDataNascimento() {
+    public Date getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
+    public void setDataNascimento(Date dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return getIdUser() == user.getIdUser() &&
+        return idUser == user.idUser &&
                 Objects.equals(getEmail(), user.getEmail()) &&
                 Objects.equals(getNome(), user.getNome()) &&
                 Objects.equals(getPassword(), user.getPassword()) &&
                 Objects.equals(getMorada(), user.getMorada()) &&
                 Objects.equals(getDataNascimento(), user.getDataNascimento());
     }
-
 
 
     public String toString() {
@@ -112,7 +113,7 @@ public class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract
                 ", nome='" + nome + '\'' +
                 ", password='" + password + '\'' +
                 ", morada='" + morada + '\'' +
-                ", dataNascimento='" + dataNascimento + '\'' +
+                ", dataNascimento='" + dataNascimento.getDate() + '-' + dataNascimento.getMonth() + '-' + dataNascimento.getYear() + '\'' +
                 '}';
     }
 
