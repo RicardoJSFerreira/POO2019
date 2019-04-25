@@ -162,8 +162,8 @@ public class Main implements Serializable {
         // Proprietário p1
             // Veiculos p1
 
-            Veiculo v1 =  new Veiculo(1,true,66,1.3,5.6,60,50,30,4,6);
-            Veiculo v2 =  new Veiculo(2,true,70,2,6,80,80,60,1,3);
+            Veiculo v1 =  new Carro(1,true,66,1.3,5.6,60,50,30,4,6,"Gasolina","PO-24-19","Peugeot");
+            Veiculo v2 =  new Carro(2,true,70,2,6,80,80,60,1,3,"Gasoleo","CG-34-25","Audi");
 
         ArrayList<Veiculo> veiculosp1 = new ArrayList<Veiculo>();
         veiculosp1.add(v1);
@@ -173,8 +173,8 @@ public class Main implements Serializable {
         // Proprietário p2
             // Veiculos p2
 
-            Veiculo v3 =  new Veiculo(3,true,90,6,7,90,100,80,0,0);
-            Veiculo v4 =  new Veiculo(4,true,45,1,3,60,80,47,1,2);
+            Veiculo v3 =  new Carro(3,true,90,6,7,90,100,80,0,0,"Gasoleo","12-OR-23","BMW");
+            Veiculo v4 =  new Carro(4,true,45,1,3,60,80,47,1,2,"Eletrico","39-LQ-11","Mercedes");
 
         ArrayList<Veiculo> veiculosp2 = new ArrayList<Veiculo>();
         veiculosp2.add(v3);
@@ -213,6 +213,7 @@ public class Main implements Serializable {
 
         TodosUsers tu = new TodosUsers();
         TodasViagens tv= new TodasViagens();
+
 
         carregaDados(tu,tv);
 

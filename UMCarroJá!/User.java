@@ -10,7 +10,7 @@ import java.util.Objects;
 // para ter uma class de todos os users se fizer Users.clone fico com todos os proprietarios e todos os clientes tambem?
 // E faz sentido fazer isto assim?
 
-public class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract tenho de definir metodos nas subclasses penso eu, tenho d eir ver
+public abstract class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract tenho de definir metodos nas subclasses penso eu, tenho d eir ver
     private  int idUser;
     private String email;
     private String nome;
@@ -117,7 +117,6 @@ public class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract
                 '}';
     }
 
-    public User clone() {
-        return new User(this);
-    }
+    public abstract User clone();
+
 }

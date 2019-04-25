@@ -8,7 +8,7 @@ public class TodosUsers {
         this.todos = new HashMap<>();
     }
 
-    public TodosUsers(Map<Integer, User> novos) {
+    public TodosUsers(Map<Integer,User> novos) {
         this.todos = new HashMap<>();
         for(Map.Entry<Integer,User> par:novos.entrySet()){
             this.todos.put(par.getKey(),(par.getValue()).clone()); // Class User nao pode ser abstract se nao nao posso fazer clone e ter todos os users numa hashmap

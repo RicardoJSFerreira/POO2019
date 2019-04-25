@@ -5,7 +5,7 @@ import java.util.Objects;
  * Classe genérica que representa um veículo.
  */
 
-public class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n tenho a certwza
+public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n tenho a certwza
     private int id; // tenho de ter um idVeiculo para saber qual deles é alugado
     private boolean disponivel;
     private double velocidadeMed;
@@ -157,7 +157,5 @@ public class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n 
                 '}';
     }
 
-    public Veiculo clone() {
-        return new Veiculo(this);
-    }
+    public abstract Veiculo clone();
 }

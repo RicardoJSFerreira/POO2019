@@ -31,12 +31,7 @@ public class Proprietario extends User{
         this.veiculos = umProprietario.getVeiculos();
 
     }
-    public Proprietario(Proprietario umProprietario, Veiculo veiculo) {
-        super(umProprietario);
-        this.classificacao = umProprietario.getClassificacao();
-        this.veiculos = umProprietario.getVeiculos();
 
-    }
 
     public int getClassificacao() {
         return classificacao;
