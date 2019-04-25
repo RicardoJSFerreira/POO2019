@@ -2,9 +2,11 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
+import java.time.LocalDateTime;
 
 
 public class MainPrincipal{
+
         public static Boolean procuraUserId(Integer id, UMCarroJa ucj){
             if(ucj.getUser(id) == null) return false;
             else return true;
@@ -69,7 +71,7 @@ public class MainPrincipal{
             System.out.print("Dia: ");
             Integer dia = sc.nextInt();
 
-            var dataNascimento = new Date(ano, mes-1, dia); // Nao tenho a certeza se está a carregar bem o mes
+            Date dataNascimento = new Date(ano, mes-1, dia); // Nao tenho a certeza se está a carregar bem o mes
             System.out.println("Pretende ser Proprietário de Veiculos(1) ou Cliente(2)?");
             int resposta = sc.nextInt();
 
@@ -242,4 +244,3 @@ public class MainPrincipal{
         }
 
     }
-

@@ -1,8 +1,9 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.*;
+import java.time.LocalDateTime;
+import java.sql.Time;
 
 public class Main implements Serializable {
 
@@ -70,7 +71,7 @@ public class Main implements Serializable {
         System.out.print("Dia: ");
         Integer dia = sc.nextInt();
 
-        var dataNascimento = new Date(ano, mes-1, dia); // Nao tenho a certeza se está a carregar bem o mes
+        Date dataNascimento = new Date(ano, mes-1, dia); // Nao tenho a certeza se está a carregar bem o mes
         System.out.println("Pretende ser Proprietário de Veiculos(1) ou Cliente(2)?");
         int resposta = sc.nextInt();
 

@@ -21,10 +21,17 @@ public class Ponto<T extends Number> implements Serializable{
         this.y = y;
     }
 
+    /**
+    * Construtor de cópia de Ponto.
+    * Aceita como parâmetro outro Ponto e utiliza os métodos de acesso aos valores das variáveis de instância.
+    */
     public Ponto(Ponto<T> p) {
         this(p.getX(), p.getY());
     }
 
+    /**
+    * Construtor por omissão de User.
+    */
     public Ponto() {
         throw new java.lang.Error("Não é possível instanciar um novo ponto sem fornecer coordenadas iniciais.");
     }
@@ -80,13 +87,22 @@ public class Ponto<T extends Number> implements Serializable{
         return Math.sqrt( Math.pow(dX, 2) + Math.pow(dY, 2) );
     }
 
+    /**
+    * Método que devolve a representação em String de Ponto
+    * @return String de Ponto.
+    */
     @Override
     public String toString() {
         return "x: " + this.x + ", "
                 + "y: " + this.y;
     }
 
-
+    /**
+    * Implementação do método de igualdade entre dois Ponto.
+    * Redifinição do método equals de Object.
+    * @param o O Ponto que é comparado com o recetor.
+    * @return Booleano true ou false.
+    */
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Ponto)) return false;
@@ -95,6 +111,10 @@ public class Ponto<T extends Number> implements Serializable{
                 Objects.equals(getY(), ponto.getY());
     }
 
+    /**
+    * Implementação do método de clonagem de um Ponto.
+    * @return Objeto do tipo Ponto.
+    */
     public Ponto clone() {
         return new Ponto(this);
     }

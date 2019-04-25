@@ -6,6 +6,8 @@ import java.util.Objects;
  */
 
 public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n tenho a certwza
+    
+    //variáveis de instância
     private int id; // tenho de ter um idVeiculo para saber qual deles é alugado
     private boolean disponivel;
     private double velocidadeMed;
@@ -18,8 +20,8 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
 
 
     /**
-     * Construtor para objetos da classe Veiculo
-     */
+    * Construtor por omissão de Veiculo.
+    */
     public Veiculo(){
         this.id = -1;
         this.disponivel = false;
@@ -31,6 +33,9 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
         this.posicao = new Ponto(0,0);
     }
     
+    /**
+    * Construtor parametrizado de Veiculo.
+    */
     public Veiculo (int id, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
                     double newPosY){
         this.id = id;
@@ -44,6 +49,10 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
         this.posicao = new Ponto<Double>(newPosX, newPosY);
     }
     
+    /**
+    * Construtor de cópia de Veiculo.
+    * Aceita como parâmetro outro Veiculo e utiliza os métodos de acesso aos valores das variáveis de instância.
+    */
     public Veiculo (Veiculo umVeiculo){
         this.id = umVeiculo.getId();
         this.disponivel = umVeiculo.getDisponivel();
@@ -56,78 +65,156 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
         this.posicao = umVeiculo.getPosicao();
     }
 
+    /**
+    * Devolve o id do Veiculo em id.
+    * @return id do Veiculo.
+    */
     public int getId() {
         return id;
     }
 
+    /**
+    * Atualiza o id do Veiculo em id.
+    * @param id Novo id do Veiculo.
+    */
     public void setId(int id) { // meter a fazer +1 em relaçao ao anterior
         this.id = id;
     }
 
+    /**
+    * Devolve a disponibilidade Veiculo em disponivel.
+    * @return disponibilidade do Veiculo.
+    */
     public boolean getDisponivel() {
         return disponivel;
     }
 
+    /**
+    * Atualiza a disponibilidade do Veiculo em disponivel.
+    * @param disponivel Nova disponibilidade do Veiculo.
+    */
     public void setDisponivel(boolean disponivel) {
         this.disponivel = disponivel;
     }
 
+    /**
+    * Devolve a velocidade média do Veiculo em velocidadeMed.
+    * @return velocidade média do Veiculo.
+    */
     public double getVelocidadeMed(){
         return this.velocidadeMed;
     }
     
+    /**
+    * Atualiza a velocidade média do Veiculo em velocidadeMed.
+    * @param velocidadeMed Nova velocidade média do Veiculo.
+    */
     public void setVelocidadeMed(double velocidadeMed){
         this.velocidadeMed = velocidadeMed;
     }
     
+    /**
+    * Devolve o preço médio do Veiculo por km em precoPorKm.
+    * @return preço médio por km do Veiculo.
+    */
     public double getPrecoPorKm(){
-        return this.velocidadeMed;
+        return this.precoPorKm;
     }
     
+    /**
+    * Atualiza o preço médio do Veiculo por km em precoPorKm.
+    * @param precoPorKm Novo preço médio por km do Veiculo.
+    */
     public void setPrecoPorKm(double precoPorKm){
         this.precoPorKm = precoPorKm;
     }
     
+    /**
+    * Devolve o consumo médio do Veiculo por km em consumoPorKm.
+    * @return consumo médio por km do Veiculo.
+    */
     public double getConsumoPorKm(){
         return this.consumoPorKm;
     }
     
+    /**
+    * Atualiza o consumo médio do Veiculo por km em consumoPorKm.
+    * @param consumoPorKm Novo consumo médio por km do Veiculo.
+    */
     public void setConsumoPorKm(double consumoPorKm){
         this.consumoPorKm = consumoPorKm;
     }
     
+    /**
+    * Devolve a classificação do Veiculo em classificacao.
+    * @return classificação do Veiculo.
+    */
     public int getClassificacao() {
         return classificacao;
     }
 
+    /**
+    * Atualiza a classificação do Veiculo em classificacao.
+    * @param classificacao Nova classificação do Veiculo.
+    */
     public void setClassificacao(int classificacao) {
         this.classificacao = classificacao;
     }
 
+    /**
+    * Devolve a autonomia máxima do Veiculo em autonomiaMax.
+    * @return autonomia máxima do Veiculo.
+    */
     public int getAutonomiaMax() {
         return autonomiaMax;
     }
 
+    /**
+    * Atualiza a autonomia máxima do Veiculo em autonomiaMax.
+    * @param autonomiaMax Nova autonomia máxima do Veiculo.
+    */
     public void setAutonomiaMax(int autonomiaMax) {
         this.autonomiaMax = autonomiaMax;
     }
 
+    /**
+    * Devolve a autonomia do Veiculo em autonomia.
+    * @return autonomia do Veiculo.
+    */
     public int getAutonomia() {
         return autonomia;
     }
 
+    /**
+    * Atualiza a autonomia do Veiculo em autonomia.
+    * @param autonomia Nova autonomia do Veiculo.
+    */
     public void setAutonomia(int autonomia) {
         this.autonomia = autonomia;
     }
     
+    /**
+    * Devolve a posição do Veiculo em posicao.
+    * @return posição do Veiculo.
+    */
     public Ponto getPosicao() {
         return this.posicao;
     }
 
+    /**
+    * Atualiza a posição do Veiculo em posicao.
+    * @param posicao Nova posiçao do Veiculo.
+    */
     public void setPosicao(Ponto posicao) {
         this.posicao = posicao;
     }
 
+    /**
+    * Implementação do método de igualdade entre dois Veiculo.
+    * Redifinição do método equals de Object.
+    * @param o O Veiculo que é comparado com o recetor.
+    * @return Booleano true ou false.
+    */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -143,6 +230,10 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
                 Objects.equals(getPosicao(), veiculo.getPosicao());
     }
 
+    /**
+    * Método que devolve a representação em String de Veiculo.
+    * @return String de Veiculo.
+    */
     @Override
     public String toString() {
         return "Veiculo{" +
@@ -157,5 +248,8 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
                 '}';
     }
 
+    /**
+    * Implementação do método de clonagem de um Veiculo.
+    */
     public abstract Veiculo clone();
 }
