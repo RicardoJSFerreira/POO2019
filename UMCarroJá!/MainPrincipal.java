@@ -2,32 +2,23 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
-import java.time.LocalDateTime;
 
 
 public class MainPrincipal{
-
-        public static Boolean procuraUserId(Integer id, UMCarroJa ucj){
-            if(ucj.getUser(id) == null) return false;
-            else return true;
-        }
-
-        public static Boolean procuraUserEmail(String email, UMCarroJa ucj){
-            if(ucj.getUserEmail(email) == null) return false;
-            else return true;
-        }
+    private UMCarroJa estado;
 
 
-        public static Integer getOpcao(){
+
+        public static Integer getOption(){
             Scanner sc = new Scanner(System.in);
             return sc.nextInt();
         }
 
-        public static void progProprietario(Proprietario pro,UMCarroJa ucj){
+        public static void progProprietario(int id,UMCarroJa ucj){
 
         }
 
-        public static void progCliente(Cliente cli,UMCarroJa ucj){
+        public static void progCliente(int id,UMCarroJa ucj){
 
         }
 
@@ -41,7 +32,7 @@ public class MainPrincipal{
                 System.out.print("Email: ");
                 email = sc.nextLine();
 
-                if (procuraUserEmail(email,ucj) == false)
+                if (ucj.procuraUserEmail(email) == false)
 
                     existe = false;
 
@@ -60,7 +51,7 @@ public class MainPrincipal{
             System.out.print("Password: ");
             String pass = sc.next();
 
-            System.out.print("Data Nascimento: ");
+            System.out.print("Data Nascimento: \n");
 
             System.out.print("Ano: ");
             Integer ano = sc.nextInt();
@@ -71,33 +62,27 @@ public class MainPrincipal{
             System.out.print("Dia: ");
             Integer dia = sc.nextInt();
 
-            Date dataNascimento = new Date(ano, mes-1, dia); // Nao tenho a certeza se está a carregar bem o mes
             System.out.println("Pretende ser Proprietário de Veiculos(1) ou Cliente(2)?");
             int resposta = sc.nextInt();
 
             if(resposta ==1){
-                Integer id = ucj.getTodosUsers().size();
-                Proprietario p = new Proprietario(id,email,nome, pass, morada, dataNascimento);
-                ucj.addUser(p);
+                ucj.registaProprietario(email,nome,pass,morada,ano,mes,dia);
                 System.out.println("Utilizador criado com sucesso");
-
+                // Criar exceção para o caso de nao gravar novo user
                 // Confirmação que insere nos Users
                 // User p1 = tu.getUser(id);
                 // System.out.println(p1);
             }
 
             if(resposta ==2){
-                Integer id = ucj.getTodosUsers().size();
-
-                System.out.println("Indique a sua localização");
+                System.out.println("Indique a sua localização\n");
 
                 System.out.println("Indique a sua posição X");
                 Integer x = sc.nextInt();
                 System.out.println("Indique a sua posição Y");
                 Integer y = sc.nextInt();
 
-                Cliente c = new Cliente(id,email,nome, pass, morada, dataNascimento, x,y);
-                ucj.addUser(c);
+                ucj.registaCliente(email,nome,pass,morada,ano,mes,dia,x,y);
                 System.out.println("Utilizador criado com sucesso");
                 // Confirmação que insere nos Users
                 // User c1 = tu.getUser(id);
@@ -108,7 +93,7 @@ public class MainPrincipal{
 
         }
 
-        public static void acesso(UMCarroJa ucj){
+        public static void loginMenu(UMCarroJa ucj){
 
             Scanner sc = new Scanner(System.in);
 
@@ -118,34 +103,32 @@ public class MainPrincipal{
             while(existe == false){
                 System.out.print("Email: ");
                 email = sc.nextLine();
-                if(procuraUserEmail(email,ucj) == true){
+                if(ucj.procuraUserEmail(email) == true){
                     existe = true;
                     //System.out.println("Encontrou o email");
                 }
                 else System.out.println("Email não existente. Tente de novo.");
             }
-
+            int id = ucj.getUserId(email);
             int acesso = 0;
             while(acesso == 0){
                 System.out.print("PASSWORD: ");
                 String pass = sc.next();
 
+                // Posso fazer isto aqui? Criar um user?
+                User u = ucj.getUser(id);
 
-                User u = ucj.getUserEmail(email);
-
-                if((u.getPassword()).equals(pass)){
+                if(ucj.verificaPasswordUser(id,pass) == true){
                     System.out.println("Acesso Garantido");
                     acesso=1;
 
                     if (u instanceof Proprietario) {
-                        Proprietario pro = (Proprietario) u;
-                        progProprietario(pro,ucj);
+                        progProprietario(id,ucj);
                         // Sabe que é um Proprietario
                         // System.out.println("Sabe que é um proprietario");
                     }
                     else{ // é um cliente
-                        Cliente cli = (Cliente) u;
-                        progCliente(cli,ucj);
+                        progCliente(id,ucj);
                         // Sabe que é um cliente
                         // System.out.println("Sabe que é um cliente");
                     }
@@ -160,6 +143,7 @@ public class MainPrincipal{
 
 
         public static void carregaDados (UMCarroJa ucj){
+            // Este carregaDados nao vai poder ser assim pois nao vou poder criar desta maneira os objetos
             // Proprietário p1
             // Veiculos p1
 
@@ -195,26 +179,23 @@ public class MainPrincipal{
 
             // Carrega Proprietarios
 
-            if(ucj.containsValue_(p1) == false)ucj.addUser(p1);
-            if(ucj.containsValue_(p2) == false)ucj.addUser(p2);
+            if(ucj.userExiste(p1) == false)ucj.addUser(p1);
+            if(ucj.userExiste(p2) == false)ucj.addUser(p2);
 
             // Carrega Clientes
 
-            if(ucj.containsValue_(c1) == false)ucj.addUser(c1);
-            if(ucj.containsValue_(c2) == false)ucj.addUser(c2);
+            if(ucj.userExiste(c1) == false)ucj.addUser(c1);
+            if(ucj.userExiste(c2) == false)ucj.addUser(c2);
 
             // Carrega Historico
 
-            if(ucj.containsValue_(h1) == false)ucj.addViagem(h1);
-            if(ucj.containsValue_(h2) == false)ucj.addViagem(h2);
+            if(ucj.pedidoExiste(h1) == false)ucj.addViagem(h1);
+            if(ucj.pedidoExiste(h2) == false)ucj.addViagem(h2);
         }
         ////////////////////////////////// Main
         public static void main(String[] args) {
-
-
+            // Isto está provisorio
             UMCarroJa ucj = new UMCarroJa();
-
-
             carregaDados(ucj);
 
             System.out.println(ucj);
@@ -226,8 +207,8 @@ public class MainPrincipal{
                 System.out.println("O que pretende fazer?");
                 System.out.println("(1) Login  (2) Registo  (3) Sair da aplicação");
 
-                switch(getOpcao()){
-                    case 1: acesso(ucj);
+                switch(getOption()){
+                    case 1: loginMenu(ucj);
                         break;
 
                     case 2: registo(ucj);
@@ -244,3 +225,4 @@ public class MainPrincipal{
         }
 
     }
+
