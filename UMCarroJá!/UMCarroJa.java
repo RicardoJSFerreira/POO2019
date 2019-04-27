@@ -136,7 +136,7 @@ public class UMCarroJa { // Vai ter o implements Comparator
 
     public void registaProprietario(String email, String nome, String pass, String morada, int ano, int mes, int dia) {
         Integer id = this.getTodosUsers().size();
-        var dataNascimento = new Date(ano, mes - 1, dia);
+        Date dataNascimento = new Date(ano, mes - 1, dia);
         Proprietario p = new Proprietario(id, email, nome, pass, morada, dataNascimento);
         this.addUser(p);
         System.out.println("Utilizador criado com sucesso");
@@ -145,7 +145,7 @@ public class UMCarroJa { // Vai ter o implements Comparator
 
     public void registaCliente(String email, String nome, String pass, String morada, int ano, int mes, int dia,int x,int y) {
         Integer id = this.getTodosUsers().size();
-        var dataNascimento = new Date(ano, mes - 1, dia);
+        Date dataNascimento = new Date(ano, mes - 1, dia);
         Cliente c = new Cliente(id, email, nome, pass, morada, dataNascimento,x,y);
         this.addUser(c);
         System.out.println("Utilizador criado com sucesso");
