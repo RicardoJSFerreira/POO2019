@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,8 +12,14 @@ public class Proprietario extends User{
 
     /**
     * Construtor por omissão de Proprietario.
-    */
-    public Proprietario() {
+     * @param id
+     * @param email
+     * @param nome
+     * @param pass
+     * @param morada
+     * @param dataNascimento
+     */
+    public Proprietario(Integer id, String email, String nome, String pass, String morada, LocalDate dataNascimento) {
         super();
         this.classificacao = 0;
         this.veiculos = new ArrayList<Veiculo>();
@@ -21,13 +28,13 @@ public class Proprietario extends User{
     /**
     * Construtor parametrizado de Proprietario.
     */
-    public Proprietario(int idUser, String email, String nome, String password, String morada, Date dataNascimento, int classificacao, ArrayList<Veiculo> listVeiculos ) {
+    public Proprietario(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento, int classificacao, ArrayList<Veiculo> listVeiculos ) {
         super(idUser,email, nome, password, morada, dataNascimento);
         this.classificacao = classificacao;
         this.veiculos = new ArrayList<Veiculo>(listVeiculos);
     }
 
-    public Proprietario(int idUser, String email, String nome, String password, String morada, Date dataNascimento) {
+    public Proprietario(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento) {
         super(idUser,email, nome, password, morada, dataNascimento);
         this.classificacao = -1;
         this.veiculos = new ArrayList<Veiculo>();
@@ -105,7 +112,8 @@ public class Proprietario extends User{
     public String toString() {
         return
                 super.toString()+"Proprietario{" +
-                "classificacao=" + classificacao +
+                        "veiculos " +veiculos +
+                        "classificacao=" + classificacao +
                 '}';
     }
 
@@ -115,5 +123,11 @@ public class Proprietario extends User{
     */
     public Proprietario clone() {
         return new Proprietario(this);
+    }
+    public Veiculo getVeiculo(int idVeiculo) {
+        for (Veiculo v : veiculos) {
+            if (v.getId() == idVeiculo) return v.clone();
+        }
+        return null;
     }
 }

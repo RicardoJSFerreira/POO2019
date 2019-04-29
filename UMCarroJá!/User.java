@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -18,7 +19,7 @@ public abstract class User { // Perguntar se deve ser abstract ou nao  -> Se for
     private String nome;
     private String password;
     private String morada;
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     /**
     * Construtor por omissão de User.
@@ -29,13 +30,13 @@ public abstract class User { // Perguntar se deve ser abstract ou nao  -> Se for
         this.nome = "";
         this.password = "";
         this.morada = "";
-        this.dataNascimento = new Date();
+        this.dataNascimento = LocalDate.now();
     }
 
     /**
     * Construtor parametrizado de User.
     */
-    public User(int idUser, String email, String nome, String password, String morada, Date dataNascimento) {
+    public User(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento) {
         this.idUser = idUser;
         this.email = email;
         this.nome = nome;
@@ -141,7 +142,7 @@ public abstract class User { // Perguntar se deve ser abstract ou nao  -> Se for
     * Devolve a Data de Nascimento em dataNascimento.
     * @return a data de nascimento.
     */
-    public Date getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
@@ -149,7 +150,7 @@ public abstract class User { // Perguntar se deve ser abstract ou nao  -> Se for
     * Atualiza a Data de Nascimento em dataNascimento.
     * @param dataNascimento Nova data de nascimento.
     */
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
@@ -183,7 +184,7 @@ public abstract class User { // Perguntar se deve ser abstract ou nao  -> Se for
                 ", nome='" + nome + '\'' +
                 ", password='" + password + '\'' +
                 ", morada='" + morada + '\'' +
-                ", dataNascimento='" + dataNascimento.getDate() + '-' + dataNascimento.getMonth() + '-' + dataNascimento.getYear() + '\'' +
+                ", dataNascimento='" + dataNascimento + '\'' +
                 '}';
     }
 

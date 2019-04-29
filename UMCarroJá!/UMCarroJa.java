@@ -1,5 +1,7 @@
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 public class UMCarroJa { // Vai ter o implements Comparator
     private Map<Integer, Pedido> viagens;
@@ -59,7 +61,7 @@ public class UMCarroJa { // Vai ter o implements Comparator
         return null;
     }
 
-    public User getUser(int id) {
+    private User getUser(int id) {
         for (User c : this.users.values()) {
             if (c.getUserId() == id) return c.clone();
         }
@@ -85,6 +87,14 @@ public class UMCarroJa { // Vai ter o implements Comparator
                 collect(Collectors.toMap((c) -> c.getIdPedido(), (c) -> c.clone()));
     }
 
+    public List<Pedido> getListViagens(){
+        List<Pedido> res = new ArrayList<Pedido>();
+        for(Pedido c : this.viagens.values())
+            res.add(c.clone());
+
+        return res;
+    }
+    // Veiculos
     public void addUser(User user) {
         this.users.put(user.getUserId(), user);
     }
@@ -136,7 +146,7 @@ public class UMCarroJa { // Vai ter o implements Comparator
 
     public void registaProprietario(String email, String nome, String pass, String morada, int ano, int mes, int dia) {
         Integer id = this.getTodosUsers().size();
-        Date dataNascimento = new Date(ano, mes - 1, dia);
+        LocalDate dataNascimento = LocalDate.of(ano, mes , dia);
         Proprietario p = new Proprietario(id, email, nome, pass, morada, dataNascimento);
         this.addUser(p);
         System.out.println("Utilizador criado com sucesso");
@@ -145,11 +155,83 @@ public class UMCarroJa { // Vai ter o implements Comparator
 
     public void registaCliente(String email, String nome, String pass, String morada, int ano, int mes, int dia,int x,int y) {
         Integer id = this.getTodosUsers().size();
-        Date dataNascimento = new Date(ano, mes - 1, dia);
+        LocalDate dataNascimento = LocalDate.of(ano, mes, dia);
         Cliente c = new Cliente(id, email, nome, pass, morada, dataNascimento,x,y);
         this.addUser(c);
         System.out.println("Utilizador criado com sucesso");
 
+    }
+
+    public int verificaTipoUser (int id){
+        // 0 cliente
+        // 1 proprietario
+        User u = this.getUser(id);
+        if (u instanceof Cliente) return 0;
+        else if (u instanceof Proprietario) return 1;
+
+        // exception??
+        return -1;
+    }
+
+    public void setNewClientLocation(int id, int x, int y){
+        User u = (Cliente)this.getUser(id);
+        Ponto p = new Ponto(x,y);
+        ((Cliente) u).setPosicao(p);
+    }
+    public void getListHistorico(int id, LocalDate begin, LocalDate end){
+        List<Historico> res = new ArrayList<Historico>();
+        List<Pedido> l = this.getListViagens();
+        for (Pedido historico: l){
+            if( historico instanceof Historico && ((historico.getIdCliente()== id) || (historico.getIdProprietario())==id) && (((Historico) historico).getDataViagem().isAfter(begin)) && (((Historico) historico).getDataViagem().isBefore(end))) {
+                res.add((Historico) historico.clone());
+            }
+        }
+        imprimeListHistoricos(id, res);
+    }
+    public void imprimeListHistoricos(int id, List<Historico> list){
+        User user = getUser(id);
+        if(user instanceof Cliente){
+        for(Historico h: list){
+            User prop = getUser(id);
+            System.out.println("Data de Viagem:" + h.getDataViagem() +
+                    "Proprietario" + prop.getNome() +
+                    " Veiculo "  //(((Proprietario) prop).getVeiculo(h.getIdVeiculo())).getId()
+                    + h.getIdVeiculo() +" Valor Pago:" + h.getValorPago()+" euros");
+
+        }
+        }
+        else{
+            for(Historico h: list){
+                User cli = getUser(id);
+                System.out.println("Data de Viagem:" + h.getDataViagem() +
+                        "CLiente" + cli.getNome() +
+                        " Veiculo " //(((Proprietario) user).getVeiculo(h.getIdVeiculo())).getId()
+                        + h.getIdVeiculo() + " Valor Pago:" + h.getValorPago()+" euros");
+
+            }
+        }
+    }
+
+    public void getListPedidosToProprietario(int id){
+        List<Pedido> res = new ArrayList<Pedido>();
+        List<Pedido> l = this.getListViagens();
+        for (Pedido pedido: l){
+            if( (pedido instanceof Pedido) && pedido.getIdProprietario()==id ) {
+                res.add(pedido.clone());
+            }
+        }
+        imprimeListPedidos(res,id);
+    }
+    public void imprimeListPedidos(List<Pedido> list, int id){
+        User prop = getUser(id);
+        for(Pedido p: list){
+            User c = getUser(p.getIdCliente());
+                System.out.println("Cliente:" + c.getNome() +
+                        "Veiculo: "+ // Nao esta a funcionar (((Proprietario) prop).getVeiculo(p.getIdVeiculo())).getId()
+                         + p.getIdVeiculo() +
+                        "Destino: " +p.getDestino());
+
+            }
     }
 
 }

@@ -1,7 +1,10 @@
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
+import java.io.IOException;
 
 
 public class MainPrincipal{
@@ -15,10 +18,78 @@ public class MainPrincipal{
         }
 
         public static void progProprietario(int id,UMCarroJa ucj){
+        // Mal entra verifica se tem algum veiculo com menos de 10% de comb
+            verificaCombustivel(id,ucj);
+            System.out.println("O que pretende ver?");
+            System.out.println("0 - Sair");
+            System.out.println("1 - Pedidos pendentes");
+            System.out.println("2 - Veiculos");
+            System.out.println("3 - Visualizar Historico de Viagens");
+            System.out.println("Insira a sua opçao: ");
+            Scanner sc = new Scanner(System.in);
+            int sair = 1;
+
+            do{
+                switch(getOption()){
+                    case 1: ucj.getListPedidosToProprietario(id);
+                        sair=0;
+                        break;
+
+                    case 2:System.out.println("nada");
+
+                    case 3:
+                        System.out.println("Ver historico desde: (ano-mes-dia)");
+                        String date = sc.nextLine();
+                        LocalDate begin = LocalDate.parse(date);
+                        System.out.println("Ate: (ano-mes-dia)");
+                        date = sc.nextLine();
+                        LocalDate end = LocalDate.parse(date);
+                        ucj.getListHistorico(id, begin, end);
+                        sair=0;
+                        break;
+                }
+            }while(sair == 1);
+        }
+
+        public static void verificaCombustivel( int id, UMCarroJa ucj){
 
         }
 
         public static void progCliente(int id,UMCarroJa ucj){
+            System.out.println("Opçoes:");
+            System.out.println("0 - Sair");
+            System.out.println("1 - Solicitar viagem");
+            System.out.println("2 - Visualizar Historico de viagens");
+            System.out.println("Insira a sua opçao: ");
+            Scanner sc = new Scanner(System.in);
+            int sair = 1;
+
+            do{
+                switch(getOption()){
+                    case 1: menuClienteSolicitaViagem(ucj,id);
+                    sair=0;
+                        break;
+
+                    case 2:
+                        System.out.println("Ver historico desde: (ano-mes-dia)");
+                        String date = sc.nextLine();
+                        LocalDate begin = LocalDate.parse(date);
+                        System.out.println("Ate: (ano-mes-dia)");
+                        date = sc.nextLine();
+                        LocalDate end = LocalDate.parse(date);
+                        ucj.getListHistorico(id, begin, end);
+                        sair=0;
+                        break;
+
+                    default: System.out.println("Ação não conhecida");
+                    break;
+            }
+        }while(sair == 1);
+}
+
+
+
+        public static void menuClienteSolicitaViagem(UMCarroJa ucj, int id){
 
         }
 
@@ -115,19 +186,26 @@ public class MainPrincipal{
                 System.out.print("PASSWORD: ");
                 String pass = sc.next();
 
-                // Posso fazer isto aqui? Criar um user?
-                User u = ucj.getUser(id);
-
                 if(ucj.verificaPasswordUser(id,pass) == true){
                     System.out.println("Acesso Garantido");
                     acesso=1;
 
-                    if (u instanceof Proprietario) {
+                    if (ucj.verificaTipoUser(id) == 1) {// é um proprietario
                         progProprietario(id,ucj);
                         // Sabe que é um Proprietario
                         // System.out.println("Sabe que é um proprietario");
                     }
-                    else{ // é um cliente
+                    else if(ucj.verificaTipoUser(id) == 0){ // é um cliente
+                        System.out.println("Indique a sua localização:\n");
+
+                        System.out.println("Indique a sua posição X");
+                        Integer x = sc.nextInt();
+                        System.out.println("Indique a sua posição Y");
+                        Integer y = sc.nextInt();
+
+                        // Set new Location
+                        ucj.setNewClientLocation(id,x,y);
+                        // Executa programa de cliente
                         progCliente(id,ucj);
                         // Sabe que é um cliente
                         // System.out.println("Sabe que é um cliente");
@@ -153,7 +231,7 @@ public class MainPrincipal{
             ArrayList<Veiculo> veiculosp1 = new ArrayList<Veiculo>();
             veiculosp1.add(v1);
             veiculosp1.add(v2);
-            Proprietario p1 = new Proprietario(0,"p1@gmail.com","miguel","pass","rua das bolinhas",new Date(1998,07,21),70,veiculosp1);
+            Proprietario p1 = new Proprietario(0,"p1@gmail.com","miguel","pass","rua das bolinhas",LocalDate.of(1998,07,21),70,veiculosp1);
 
             // Proprietário p2
             // Veiculos p2
@@ -164,16 +242,20 @@ public class MainPrincipal{
             ArrayList<Veiculo> veiculosp2 = new ArrayList<Veiculo>();
             veiculosp2.add(v3);
             veiculosp2.add(v4);
-            Proprietario p2 = new Proprietario(1,"p2@gmail.com","Carlos","pass","rua das tortilhas",new Date(1995,9,21),78,veiculosp2);
+            Proprietario p2 = new Proprietario(1,"p2@gmail.com","Carlos","pass","rua das tortilhas",LocalDate.of(1995,9,21),78,veiculosp2);
 
             // Clientes
-            Cliente c1 = new Cliente(2, "c1@gmail.com", "Ricardo", "pass", "Rua das Flores", new Date(1998,8,15), 2.0, 3.0, 10);
-            Cliente c2 = new Cliente(3, "c2@gmail.com", "Joao", "pass", "Rua das Ortigas", new Date(1996,04,19), 1, 5.0, 8);
+            Cliente c1 = new Cliente(2, "c1@gmail.com", "Ricardo", "pass", "Rua das Flores", LocalDate.of(1998,8,15), 2.0, 3.0, 10);
+            Cliente c2 = new Cliente(3, "c2@gmail.com", "Joao", "pass", "Rua das Ortigas", LocalDate.of(1996,04,19), 1, 5.0, 8);
+
+            // Pedidos
+            Pedido ped1 = new Pedido(0,2,1,1,5,3,new Time(0,0,0));
+            Pedido ped2 = new Pedido(1,2,1,2,5,3,new Time(0,0,0));
 
             // Historico
-            Historico h1 = new Historico(1,3,1,1,4,6,new Time(0,2,0),10,new Date(2019, 10, 15));
-            Historico h2 = new Historico(2,4,2,3,0,0,new Time(0,3,0),30,new Date(2019, 10, 15));
-
+            Historico h1 = new Historico(2,2,1,1,4,6,new Time(0,2,0),10,LocalDate.of(2019, 10, 15));
+            Historico h2 = new Historico(3,2,1,3,0,0,new Time(0,3,0),30,LocalDate.of(2019, 10, 20));
+            Historico h3 = new Historico(3,3,1,3,0,0,new Time(0,3,0),30,LocalDate.of(2019, 10, 20));
 
 
 
