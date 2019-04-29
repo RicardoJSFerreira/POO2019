@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class Historico extends Pedido {
     
-	//variáveis de instância
+    //variáveis de instância
     private int valorPago; // vai ter de ser calculado atraves da distancia percorrida e o preço/km
     private LocalDate dataViagem;
 

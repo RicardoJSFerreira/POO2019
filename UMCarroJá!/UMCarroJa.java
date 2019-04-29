@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 
 public class UMCarroJa { // Vai ter o implements Comparator
+    
     private Map<Integer, Pedido> viagens;
     private Map<Integer, User> users;
 
@@ -178,6 +179,7 @@ public class UMCarroJa { // Vai ter o implements Comparator
         Ponto p = new Ponto(x,y);
         ((Cliente) u).setPosicao(p);
     }
+    
     public void getListHistorico(int id, LocalDate begin, LocalDate end){
         List<Historico> res = new ArrayList<Historico>();
         List<Pedido> l = this.getListViagens();
@@ -188,6 +190,7 @@ public class UMCarroJa { // Vai ter o implements Comparator
         }
         imprimeListHistoricos(id, res);
     }
+    
     public void imprimeListHistoricos(int id, List<Historico> list){
         User user = getUser(id);
         if(user instanceof Cliente){
@@ -222,6 +225,7 @@ public class UMCarroJa { // Vai ter o implements Comparator
         }
         imprimeListPedidos(res,id);
     }
+    
     public void imprimeListPedidos(List<Pedido> list, int id){
         User prop = getUser(id);
         for(Pedido p: list){
