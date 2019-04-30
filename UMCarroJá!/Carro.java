@@ -27,6 +27,13 @@ public class Carro extends Veiculo {
         this.matricula = matricula;
         this.marca = marca;
     }
+    public Carro(int id, double velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia, double newPosX,
+                 double newPosY,String tipoCombustivel, String matricula, String marca) {
+        super(id, false, velocidadeMed, precoPorKm, consumoPorKm,0, autonomiaMax, autonomia, newPosX, newPosY);
+        this.tipoCombustivel = tipoCombustivel;
+        this.matricula = matricula;
+        this.marca = marca;
+    }
 
     /**
     * Construtor de cópia de Carro.

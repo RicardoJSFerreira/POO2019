@@ -4,7 +4,6 @@ import java.util.stream.Collectors;
 
 
 public class UMCarroJa { // Vai ter o implements Comparator
-    
     private Map<Integer, Pedido> viagens;
     private Map<Integer, User> users;
 
@@ -69,14 +68,21 @@ public class UMCarroJa { // Vai ter o implements Comparator
         return null;
     }
 
-    public Map<Integer, User> getTodosUsers() {
+    private Map<Integer, User> getTodosUsers() {
         return this.users.values().stream().
                 collect(Collectors.toMap((c) -> c.getUserId(), (c) -> c.clone()));
     }
 
+    public List<User> getListUsers(){
+        List<User> res = new ArrayList<User>();
+        for(User c : this.users.values())
+            res.add(c.clone());
+
+        return res;
+    }
     // Viagens
 
-    public Pedido getViagem(int id) {
+    private Pedido getViagem(int id) {
         for (Pedido c : this.viagens.values()) {
             if (c.getIdPedido() == id) return c.clone();
         }
@@ -105,15 +111,6 @@ public class UMCarroJa { // Vai ter o implements Comparator
     }
 
 
-    public boolean idPedidoExiste(Integer key) {
-        if (this.viagens.containsKey(key)) return true;
-        else return false;
-    }
-
-    public boolean idUserExiste(Integer key) {
-        if (this.users.containsKey(key)) return true;
-        else return false;
-    }
 
     public boolean pedidoExiste(Pedido value) {
         if (this.viagens.containsValue(value)) return true;
@@ -123,11 +120,6 @@ public class UMCarroJa { // Vai ter o implements Comparator
     public boolean userExiste(User value) {
         if (this.users.containsValue(value)) return true;
         else return false;
-    }
-
-    public boolean procuraUserId(Integer id) {
-        if (this.getUser(id) == null) return false;
-        else return true;
     }
 
     public boolean procuraUserEmail(String email) {
@@ -179,7 +171,6 @@ public class UMCarroJa { // Vai ter o implements Comparator
         Ponto p = new Ponto(x,y);
         ((Cliente) u).setPosicao(p);
     }
-    
     public void getListHistorico(int id, LocalDate begin, LocalDate end){
         List<Historico> res = new ArrayList<Historico>();
         List<Pedido> l = this.getListViagens();
@@ -190,7 +181,6 @@ public class UMCarroJa { // Vai ter o implements Comparator
         }
         imprimeListHistoricos(id, res);
     }
-    
     public void imprimeListHistoricos(int id, List<Historico> list){
         User user = getUser(id);
         if(user instanceof Cliente){
@@ -225,7 +215,6 @@ public class UMCarroJa { // Vai ter o implements Comparator
         }
         imprimeListPedidos(res,id);
     }
-    
     public void imprimeListPedidos(List<Pedido> list, int id){
         User prop = getUser(id);
         for(Pedido p: list){
@@ -238,4 +227,120 @@ public class UMCarroJa { // Vai ter o implements Comparator
             }
     }
 
+    public void adicionaCarro(int velocidade,int precoPorKm,int consumoPorKm, int autonomiaMax, int autonomia, int x, int y, String tipoCombustivel, String matricula, String marca, int id){// { // Acho que nao é preciso pq nao chega aqui se n for um prop
+        //if (verificaTipoUser(id) != 1) throw new UserNaoeProprietarioException("Está logado como um cliente");
+        int idVeiculo = getIdUltimoVeiculo();
+        User p = getUser(id);
+        List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
+        Veiculo v = new Carro(idVeiculo,velocidade,precoPorKm,consumoPorKm,autonomiaMax,autonomia,x,y,tipoCombustivel,matricula,marca);
+        veiculos.add(v);
+        ((Proprietario) p).setVeiculos(veiculos);
+
+        System.out.println(p);
+    }
+
+    public void imprimeListVeiculos(int id){
+        User p = getUser(id);
+        List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
+        int i = 0;
+        for (Veiculo v: veiculos) {
+            System.out.println(i);
+            System.out.println(v);
+            // verificar se esta a imprimir matricula
+            i++;
+        }
+    }
+
+    public void abastecerVeiculo(int id, int vei, int comb){ // Funciona
+        User p = getUser(id);
+        List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
+        int i = 0;
+        for (Veiculo v: veiculos) {
+            if(i==vei){
+                int aut = v.getAutonomia();
+                if((aut+comb)>v.getAutonomiaMax())
+                    v.setAutonomia(v.getAutonomiaMax());
+
+                else v.setAutonomia(aut+comb);
+            }
+            i++;
+        }
+        ((Proprietario) p).setVeiculos(veiculos);
+        System.out.println(veiculos);
+    }
+
+    public void sinalizarVeiculoComoDisponivel(int id, int veic){
+        User p = getUser(id);
+        List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
+        int i = 0;
+        for (Veiculo v: veiculos) {
+            if(i==veic){
+            v.setDisponivel(true);
+            }
+            i++;
+        }
+        ((Proprietario) p).setVeiculos(veiculos);
+        System.out.println(veiculos);
+    }
+
+    public void alterarPrecoPorKm(int id, int veic, double preco){
+        User p = getUser(id);
+        List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
+        int i = 0;
+        for (Veiculo v: veiculos) {
+            if(i==veic){
+                v.setConsumoPorKm(preco);
+            }
+            i++;
+        }
+        ((Proprietario) p).setVeiculos(veiculos);
+        System.out.println(veiculos);
+    }
+// Há aqui uma coisa mal
+// idVeiculo no historico, posso ter varios ids iguais e pertencerem a um prop diferente
+// idVeiculo vai ter de ser em relaçao a todos os veiculos dos users criados anteriormente
+// Tenho de arranjar maneira de identificar o veiculo
+
+    public void getTotalFaturado(int id, int veic, LocalDate begin, LocalDate end){
+            List<Historico> res = new ArrayList<Historico>();
+            List<Pedido> l = this.getListViagens();
+            int totalFaturado=0;
+            for (Pedido historico: l){
+                if( historico instanceof Historico && (historico.getIdProprietario()== id) && (historico.getIdVeiculo())==veic && (((Historico) historico).getDataViagem().isAfter(begin)) && (((Historico) historico).getDataViagem().isBefore(end))) {
+                    totalFaturado=((Historico) historico).getValorPago()+totalFaturado;
+                }
+            }
+            System.out.println("veiculo "+ veic +"faturou: "+totalFaturado);
+
+    }
+
+    public void verificaCombustivel(int id){
+        User p = getUser(id);
+        List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
+        for (Veiculo v: veiculos) {
+            if((double)((v.getAutonomia()*100.0f)/(v.getAutonomiaMax()))<10){
+                System.out.println("Veiculo " + v.getId()+ "na posicao" + v.getPosicao() + "está na reserva");
+        }
+        }
+    }
+
+    public int getIdUltimoVeiculo(){
+        List<User> us = getListUsers();
+        int i=0;
+        for (User p :us) {
+            if(p instanceof Proprietario){
+                List<Veiculo> list =((Proprietario) p).getVeiculos();
+                for (Veiculo v: list) {
+                    if((v.getId())>i){i=v.getId();
+                    }
+                }
+            }
+        }
+        System.out.println(i+1);
+        return i+1;
+
+    }
+
 }
+
+
