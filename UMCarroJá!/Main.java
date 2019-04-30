@@ -12,178 +12,180 @@ public class Main{
 
 
 
-        public static Integer getOption(){
-            Scanner sc = new Scanner(System.in);
-            return sc.nextInt();
-        }
+    public static Integer getOption(){
+        Scanner sc = new Scanner(System.in);
+        return sc.nextInt();
+    }
 
-        public static void progProprietario(int id,UMCarroJa ucj){
+    public static void progProprietario(int id,UMCarroJa ucj){
         // Mal entra verifica se tem algum veiculo com menos de 10% de comb
-            ucj.verificaCombustivel(id);
-            System.out.println("O que pretende ver?");
-            System.out.println("0 - Sair");
-            System.out.println("1 - Pedidos pendentes");
-            System.out.println("2 - Meus Veiculos");
-            System.out.println("3 - Visualizar Historico de Viagens");
-            System.out.println("Insira a sua opÃ§ao: ");
-            Scanner sc = new Scanner(System.in);
-            int sair = 1;
+        ucj.verificaCombustivel(id);
+        System.out.println("Seja bem vindo!");
+        System.out.println("0 - Sair");
+        System.out.println("1 - Pedidos pendentes");
+        System.out.println("2 - Meus Veículos");
+        System.out.println("3 - Visualizar Historico de Viagens");
+        System.out.println("Insira a sua opção: ");
+        Scanner sc = new Scanner(System.in);
+        int sair = 1;
 
-            do{
-                switch(getOption()){
-                    case 1: ucj.getListPedidosToProprietario(id);
+        do{
+            switch(getOption()){
+                case 1: ucj.getListPedidosToProprietario(id);
                         sair=0;
                         break;
 
-                    case 2: menuVeiculosProprietario(id,ucj);
+                case 2: menuVeiculosProprietario(id,ucj);
                         sair=0;
                         break;
-                    case 3:
-                        System.out.println("Ver historico desde: (ano-mes-dia)");
+                case 3:
+                        System.out.println("A partir de que data pretente consultar o histórico? (Ano-Mês-Dia)");
                         String date = sc.nextLine();
                         LocalDate begin = LocalDate.parse(date);
-                        System.out.println("Ate: (ano-mes-dia)");
+                        System.out.println("Até que data pretende obter o histórico? (Ano-Mês-Dia)");
                         date = sc.nextLine();
                         LocalDate end = LocalDate.parse(date);
                         ucj.getListHistorico(id, begin, end);
                         sair=0;
                         break;
                 }
-            }while(sair == 1);
+        }while(sair == 1);
         }
 
-        public static void menuVeiculosProprietario (int id, UMCarroJa ucj){
-            ucj.imprimeListVeiculos(id);
-            Scanner sc = new Scanner(System.in);
-            System.out.println("O que pretende fazer?");
-            System.out.println("0 - Sair");
-            System.out.println("1 - Abastecer veiculos");
-            System.out.println("2 - Sinalizar veiculo ocmo disponivel");
-            System.out.println("3 - Alterar preÃ§o por Km");
-            System.out.println("4 - Adicionar veiculo");
-            int sair = 1;
-            do{
-                switch(getOption()){
-                    case 0: progProprietario(id,ucj);
+    public static void menuVeiculosProprietario (int id, UMCarroJa ucj){
+        ucj.imprimeListVeiculos(id);
+        Scanner sc = new Scanner(System.in);
+        System.out.println("O que pretende fazer?");
+        System.out.println("0 - Sair");
+        System.out.println("1 - Abastecer veículos");
+        System.out.println("2 - Sinalizar veículo como disponivel");
+        System.out.println("3 - Alterar preço por Km");
+        System.out.println("4 - Adicionar veículo");
+        int sair = 1;
+        do{
+            switch(getOption()){
+                case 0: progProprietario(id,ucj);
                         sair=0;
                         break;
 
-                    case 1:
-                        System.out.println("Indique o nr do veiculo que pretende abastecer");
+                case 1:
+                        System.out.println("Indique qual o veículo que pretende abastecer:");
                         int v =sc.nextInt();
-                        System.out.println("Indique a quantidade de combustivel que pretende depositar no veiculo" + v);
+                        System.out.println("Indique a quantidade de combustível que pretende depositar no veículo" + v + ":");
                         int comb = sc.nextInt();
                         ucj.abastecerVeiculo(id,v, comb);
                         sair=0;
                         break;
 
-                    case 2:
-                        System.out.println("Indique o nr do veiculo que pretende Sinalzizar como disponivel");
+                case 2:
+                        System.out.println("Indique qual o veículo que pretende sinalizar como disponível:");
                         v =sc.nextInt();
                         ucj.sinalizarVeiculoComoDisponivel(id, v);
                         sair=0;
                         break;
 
-                    case 3:
-                        System.out.println("Indique o nr do veiculo que pretende alterar o preÃ§o por km");
+                case 3:
+                        System.out.println("Indique o veículo para o qual pretende alterar o preço por Km:");
                         v = sc.nextInt();
-                        System.out.println("Indique o preÃ§o por km para o veiculo" + v);
+                        System.out.println("Indique o novo preço por Km para o veículo" + v + ":");
                         double preco = sc.nextDouble();
                         ucj.alterarPrecoPorKm(id,v, preco);
                         sair=0;
                         break;
-                    case 4:
+                case 4:
                         menuAdicionarVeiculo(id, ucj);
                         sair=0;
                         break;
-                    case 5:
-                        System.out.println("Indique o nr do veiculo que pretende visualizar total faturado");
+                case 5:
+                        System.out.println("Indique qual o veículo do qual pretende obter o total faturado:");
                         v = sc.nextInt();
-                        System.out.println("Ver Total faturado desde: (ano-mes-dia)");
+                        System.out.println("A partir de que data deseja ver o total faturado? (Ano-Mês-Dia)");
                         String date = sc.nextLine();
                         LocalDate begin = LocalDate.parse(date);
-                        System.out.println("Ate: (ano-mes-dia)");
+                        System.out.println("Até que data deseja obter o total faturado? (Ano-Mês-Dia)");
                         date = sc.nextLine();
                         LocalDate end = LocalDate.parse(date);
                         ucj.getTotalFaturado(id,v, begin, end);
                         sair=0;
                         break;
 
-                        default: System.out.println("Opï¿½ï¿½o nï¿½o conhecida");
+                default: System.out.println("Opção não conhecida");
                         break;
                 }
-            }while(sair == 1);
-        }
+        }while(sair == 1);
+    }
 
     public static void menuAdicionarVeiculo(int id, UMCarroJa ucj){
+        
         Scanner sc = new Scanner(System.in);
-        System.out.println("Indique a velocidade media");
+        System.out.println("Indique a velocidade média:");
         int velocidade = sc.nextInt();
-        System.out.println("Indique o preÃ§o por km");
+        System.out.println("Indique o preço por Km:");
         int precoPorKm = sc.nextInt();
-        System.out.println("Indique a Consumo por km");
+        System.out.println("Indique o consumo médio por Km:");
         int consumoPorKm = sc.nextInt();
-        System.out.println("Indique a autonimia maxima");
+        System.out.println("Indique a autonomia máxima do veículo:");
         int autonomiaMax = sc.nextInt();
-        System.out.println("Indique a autonomia");
+        System.out.println("Indique a autonomia atual:");
         int autonomia = sc.nextInt();
-        System.out.println("Indique a posicao x");
+        System.out.println("Indique qual a posição x do veículo:");
         int x = sc.nextInt();
-        System.out.println("Indique a posicao y");
+        System.out.println("Indique qual a posicao y do veículo:");
         int y = sc.nextInt();
-        System.out.println("Indique o tipo de combustivel");
+        System.out.println("Indique o tipo de combustível:");
         String tipoCombustivel= sc.next();
-        System.out.println("Indique a matricula");
+        System.out.println("Indique a matrícula:");
         String matricula = sc.next();
-        System.out.println("Indique a marca");
+        System.out.println("Indique a marca:");
         String marca = sc.next();
 
         ucj.adicionaCarro(velocidade,precoPorKm,consumoPorKm,autonomiaMax,autonomia,x,y,tipoCombustivel,matricula,marca,id);
     }
 
-        public static void progCliente(int id,UMCarroJa ucj){
-            System.out.println("OpÃ§oes:");
+    public static void progCliente(int id,UMCarroJa ucj){
+            System.out.println("Seja bem vindo!");
             System.out.println("0 - Sair");
             System.out.println("1 - Solicitar viagem");
-            System.out.println("2 - Visualizar Historico de viagens");
-            System.out.println("Insira a sua opÃ§ao: ");
+            System.out.println("2 - Visualizar histórico de viagens");
+            System.out.println("Insira a sua opção: ");
             Scanner sc = new Scanner(System.in);
             int sair = 1;
 
-            do{
-                switch(getOption()){
-                    case 1:
+        do{
+            switch(getOption()){
+                case 1:
                         menuClienteSolicitaViagem(ucj,id);
                         sair=0;
                         break;
 
-                    case 2:
-                        System.out.println("Ver historico desde: (ano-mes-dia)");
+                case 2:
+                        System.out.println("A partir de que data pretente consultar o histórico? (Ano-Mês-Dia)");
                         String date = sc.nextLine();
                         LocalDate begin = LocalDate.parse(date);
-                        System.out.println("Ate: (ano-mes-dia)");
+                        System.out.println("Até que data pretende obter o histórico? (Ano-Mês-Dia)");
                         date = sc.nextLine();
                         LocalDate end = LocalDate.parse(date);
                         ucj.getListHistorico(id, begin, end);
                         sair=0;
                         break;
 
-                    default: System.out.println("AÃ§Ã£o nÃ£o conhecida");
+                default: System.out.println("Opção não conhecida");
                     break;
             }
         }while(sair == 1);
-}
+    }
 
 
 
         public static void menuClienteSolicitaViagem(UMCarroJa ucj, int id){
-            System.out.println("Insira as suas coordenadas:");
+            
+            System.out.println("Insira as suas coordenadas atuais:");
             System.out.println("Coordenada x:");
             int x = getOption();
             System.out.println("Coordenada y:");
             int y = getOption();
 
-            System.out.println("Insira as coordenadas para onde pretende ir:");
+            System.out.println("Insira as coordenadas do local para onde pretende ir:");
             System.out.println("Coordenada x:");
             int posx = getOption();
             System.out.println("Coordenada y:");
@@ -192,14 +194,14 @@ public class Main{
 
 
 
-            System.out.println("OpÃ§oes:");
+            System.out.println("Qual a solicitação que pretende efetuar?");
             System.out.println("0 - Voltar");
-            System.out.println("1 - Solicitar aluguer do carro mais prï¿½ximo das suas coordenadas");
+            System.out.println("1 - Solicitar aluguer do carro mais próximo das suas coordenadas");
             System.out.println("2 - Solicitar aluguer do carro mais barato");
-            System.out.println("3 - Solicitar aluguer do carro mais barato dentro de determinada distï¿½ncia ");
-            System.out.println("4 - Solicitar aluguer de um carro especï¿½fico: ");
-            System.out.println("5 - Solicitar aluguer do carro com autonomia desejada ");
-            System.out.println("Insira a sua opï¿½ï¿½o: ");
+            System.out.println("3 - Solicitar aluguer do carro mais barato dentro de determinada distância");
+            System.out.println("4 - Solicitar aluguer de um carro específico");
+            System.out.println("5 - Solicitar aluguer do carro com uma autonomia por si desejada");
+            System.out.println("Insira a sua opção:");
             Scanner sc = new Scanner(System.in);
             int sair = 1;
 
@@ -222,14 +224,15 @@ public class Main{
                     case 5: alugCarroAuton(ucj, id);
                         sair = 0; break;
 
-                    default: System.out.println("AÃ§Ã£o nÃ£o conhecida");
+                    default: System.out.println("Opção não conhecida");
                         break;
                 }
             } while(sair == 1);
         }
+    
     public static void alugCarroMaisProx(UMCarroJa ucj, int id){
 
-        //implementar metodo que mostra a lista dos veï¿½culos mais prï¿½ximos
+        //implementar metodo que mostra a lista dos veículos mais próximos
 
 
     }
@@ -260,7 +263,7 @@ public class Main{
             String email = "";
             boolean existe = true;
             while(existe == true){
-                System.out.print("Email: ");
+                System.out.print("Insira o seu e-mail:");
                 email = sc.nextLine();
 
                 if (ucj.procuraUserEmail(email) == false)
@@ -268,12 +271,12 @@ public class Main{
                     existe = false;
 
                 else{
-                    System.out.println("Email ja existente. Tente de novo.");
+                    System.out.println("E-mail já existente. Tente de novo.");
 
                 }
             }
 
-            System.out.print("Nome: ");
+            System.out.print("Nome:");
             String nome = sc.nextLine();
 
             System.out.print("Morada: ");
@@ -293,7 +296,7 @@ public class Main{
             System.out.print("Dia: ");
             Integer dia = sc.nextInt();
 
-            System.out.println("Pretende ser ProprietÃ¡rio de Veiculos(1) ou Cliente(2)?");
+            System.out.println("Pretende utilizar a aplicação enquanto Proprietário (insira '1') ou Cliente (insira '2')?");
             int resposta = sc.nextInt();
 
             if(resposta ==1){
@@ -306,11 +309,11 @@ public class Main{
             }
 
             if(resposta ==2){
-                System.out.println("Indique a sua localizaÃ§Ã£o\n");
+                System.out.println("A sua localização:");
 
-                System.out.println("Indique a sua posiÃ§Ã£o X");
+                System.out.println("Indique a sua posição x:");
                 Integer x = sc.nextInt();
-                System.out.println("Indique a sua posiÃ§Ã£o Y");
+                System.out.println("Indique a sua posição y:");
                 Integer y = sc.nextInt();
 
                 ucj.registaCliente(email,nome,pass,morada,ano,mes,dia,x,y);
@@ -338,12 +341,12 @@ public class Main{
                     existe = true;
                     //System.out.println("Encontrou o email");
                 }
-                else System.out.println("Email nÃ£o existente. Tente de novo.");
+                else System.out.println("E-mail não existente. Tente de novo.");
             }
             int id = ucj.getUserId(email);
             int acesso = 0;
             while(acesso == 0){
-                System.out.print("PASSWORD: ");
+                System.out.print("Password: ");
                 String pass = sc.next();
 
                 if(ucj.verificaPasswordUser(id,pass) == true){
@@ -361,7 +364,7 @@ public class Main{
                         // System.out.println("Sabe que Ã© um cliente");
                     }
                 }
-                else System.out.println("Password errada");
+                else System.out.println("Password errada. Tente de novo.");
             }
 
         }
@@ -436,8 +439,8 @@ public class Main{
             int menu = 0;
 
             do{
-                System.out.println("O que pretende fazer?");
-                System.out.println("(1) Login  (2) Registo  (3) Sair da aplicaÃ§Ã£o");
+                System.out.println("Bem vindo! ");
+                System.out.println("(1) Efetuar Login  (2) Efetuar Registo  (3) Sair da aplicação");
 
                 switch(getOption()){
                     case 1: loginMenu(ucj);
@@ -450,7 +453,7 @@ public class Main{
                         // guarda tudo o que foi alterado
                         break;
 
-                    default: System.out.println("AÃ§Ã£o nÃ£o conhecida");
+                    default: System.out.println("Opção não conhecida");
                         break;
                 }
             }while(menu == 0);
