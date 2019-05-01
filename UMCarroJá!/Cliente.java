@@ -17,16 +17,8 @@ public class Cliente extends User implements Serializable {
 
     /**
     * Construtor por omissão de Cliente.
-     * @param id
-     * @param email
-     * @param nome
-     * @param pass
-     * @param morada
-     * @param dataNascimento
-     * @param x
-     * @param y
      */
-    public Cliente(Integer id, String email, String nome, String pass, String morada, LocalDate dataNascimento, int x, int y) {
+    public Cliente() {
         super();
         this.posicao = new Ponto(0,0);
         this.classificacao = -1;
@@ -35,13 +27,13 @@ public class Cliente extends User implements Serializable {
     /**
     * Construtor parametrizado de Cliente.
     */
-    public Cliente(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento, double newPosX, double newPosY, int classificacao) {
+    public Cliente(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento, Double newPosX, Double newPosY, int classificacao) {
         super(idUser,email, nome, password, morada, dataNascimento);
         this.posicao = new Ponto<Double>(newPosX, newPosY);
         this.classificacao = classificacao;
     }
 
-    public Cliente(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento, double newPosX, double newPosY) {
+    public Cliente(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento, Double newPosX, Double newPosY) {
         super(idUser,email, nome, password, morada, dataNascimento);
         this.posicao = new Ponto<Double>(newPosX, newPosY);
         this.classificacao = -1;

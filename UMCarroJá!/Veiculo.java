@@ -8,7 +8,7 @@ import java.util.Objects;
 public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n tenho a certwza
     
     //variáveis de instância
-    private int id; // tenho de ter um idVeiculo para saber qual deles é alugado
+    private String matricula;
     private boolean disponivel;
     private double velocidadeMed;
     private double precoPorKm;
@@ -23,7 +23,7 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
     * Construtor por omissão de Veiculo.
     */
     public Veiculo(){
-        this.id = -1;
+        this.matricula= "";
         this.disponivel = false;
         this.velocidadeMed = 0.0;
         this.precoPorKm = 0.0;
@@ -36,9 +36,9 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
     /**
     * Construtor parametrizado de Veiculo.
     */
-    public Veiculo (int id, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
+    public Veiculo (String matricula, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
                     double newPosY){
-        this.id = id;
+        this.matricula = matricula;
         this.disponivel = disponivel;
         this.velocidadeMed = velocidadeMed;
         this.precoPorKm = precoPorKm;
@@ -54,7 +54,7 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
     * Aceita como parâmetro outro Veiculo e utiliza os métodos de acesso aos valores das variáveis de instância.
     */
     public Veiculo (Veiculo umVeiculo){
-        this.id = umVeiculo.getId();
+        this.matricula = umVeiculo.getMatricula();
         this.disponivel = umVeiculo.getDisponivel();
         this.velocidadeMed = umVeiculo.getVelocidadeMed();
         this.precoPorKm = umVeiculo.getPrecoPorKm();
@@ -66,19 +66,19 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
     }
 
     /**
-    * Devolve o id do Veiculo em id.
-    * @return id do Veiculo.
+    * Devolve a matricula do Veiculo em .
+    * @return matricula do Veiculo.
     */
-    public int getId() {
-        return id;
+    public String getMatricula() {
+        return matricula;
     }
 
     /**
-    * Atualiza o id do Veiculo em id.
-    * @param id Novo id do Veiculo.
+    * Atualiza a matricula do veiculo.
+    * @param matricula Novo id do Veiculo.
     */
-    public void setId(int id) { // meter a fazer +1 em relaçao ao anterior
-        this.id = id;
+    public void setMatricula(String matricula) { // meter a fazer +1 em relaçao ao anterior
+        this.matricula = matricula;
     }
 
     /**
@@ -215,6 +215,7 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
     * @param o O Veiculo que é comparado com o recetor.
     * @return Booleano true ou false.
     */
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -227,7 +228,13 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
                 getClassificacao() == veiculo.getClassificacao() &&
                 getAutonomiaMax() == veiculo.getAutonomiaMax() &&
                 getAutonomia() == veiculo.getAutonomia() &&
+                Objects.equals(getMatricula(), veiculo.getMatricula()) &&
                 Objects.equals(getPosicao(), veiculo.getPosicao());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMatricula(), getDisponivel(), getVelocidadeMed(), getPrecoPorKm(), getConsumoPorKm(), getClassificacao(), getAutonomiaMax(), getAutonomia(), getPosicao());
     }
 
     /**
@@ -236,7 +243,7 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
     */
     @Override
     public String toString() {
-        return "Veiculo{" +
+        return "Veiculo{" + matricula +
                 ", disponivel=" + disponivel +
                 ", velocidadeMed=" + velocidadeMed +
                 ", precoPorKm=" + precoPorKm +

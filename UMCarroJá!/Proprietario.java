@@ -124,9 +124,9 @@ public class Proprietario extends User{
     public Proprietario clone() {
         return new Proprietario(this);
     }
-    public Veiculo getVeiculo(int idVeiculo) {
+    public Veiculo getVeiculo(String matricula) {
         for (Veiculo v : veiculos) {
-            if (v.getId() == idVeiculo) return v.clone();
+            if (v.getMatricula().equals(matricula)) return v.clone();
         }
         return null;
     }

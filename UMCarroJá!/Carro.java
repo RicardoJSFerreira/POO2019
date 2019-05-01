@@ -4,7 +4,6 @@ public class Carro extends Veiculo {
     
     //variáveis de instância
     private String tipoCombustivel;
-    private String matricula;
     private String marca;
 
     /**
@@ -13,25 +12,22 @@ public class Carro extends Veiculo {
     public Carro() {
         super();
         this.tipoCombustivel = "";
-        this.matricula = "";
         this.marca = "";
     }
 
     /**
     * Construtor parametrizado de Carro.
     */
-    public Carro(int id, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
-                 double newPosY,String tipoCombustivel, String matricula, String marca) {
-        super(id, disponivel, velocidadeMed, precoPorKm, consumoPorKm, classificacao, autonomiaMax, autonomia, newPosX, newPosY);
+    public Carro(String matricula, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
+                 double newPosY,String tipoCombustivel, String marca) {
+        super(matricula, disponivel, velocidadeMed, precoPorKm, consumoPorKm, classificacao, autonomiaMax, autonomia, newPosX, newPosY);
         this.tipoCombustivel = tipoCombustivel;
-        this.matricula = matricula;
         this.marca = marca;
     }
-    public Carro(int id, double velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia, double newPosX,
-                 double newPosY,String tipoCombustivel, String matricula, String marca) {
-        super(id, false, velocidadeMed, precoPorKm, consumoPorKm,0, autonomiaMax, autonomia, newPosX, newPosY);
+    public Carro(String matricula, double velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia, double newPosX,
+                 double newPosY,String tipoCombustivel, String marca) {
+        super(matricula, false, velocidadeMed, precoPorKm, consumoPorKm,0, autonomiaMax, autonomia, newPosX, newPosY);
         this.tipoCombustivel = tipoCombustivel;
-        this.matricula = matricula;
         this.marca = marca;
     }
 
@@ -42,7 +38,6 @@ public class Carro extends Veiculo {
     public Carro(Carro umCarro) {
         super(umCarro);
         this.tipoCombustivel = umCarro.getTipoCombustivel();
-        this.matricula = umCarro.getMatricula();
         this.marca = umCarro.getMarca();
     }
 
@@ -60,22 +55,6 @@ public class Carro extends Veiculo {
     */
     public void setTipoCombustivel(String tipoCombustivel) {
         this.tipoCombustivel = tipoCombustivel;
-    }
-
-    /**
-    * Devolve a matrícula do Carro em matricula.
-    * @return matrícula do Carro.
-    */
-    public String getMatricula() {
-        return matricula;
-    }
-
-    /**
-    * Atualiza a matrícula do Carro em matricula.
-    * @param matricula Nova matrícula do Carro.
-    */
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
     }
 
     /**
@@ -102,7 +81,6 @@ public class Carro extends Veiculo {
     public String toString() {
         return super.toString()+"Carro{" +
                 "tipoCombustivel='" + tipoCombustivel + '\'' +
-                ", matricula='" + matricula + '\'' +
                 ", marca='" + marca + '\'' +
                 '}';
     }
@@ -120,7 +98,6 @@ public class Carro extends Veiculo {
         if (!super.equals(o)) return false;
         Carro carro = (Carro) o;
         return Objects.equals(getTipoCombustivel(), carro.getTipoCombustivel()) &&
-                Objects.equals(getMatricula(), carro.getMatricula()) &&
                 Objects.equals(getMarca(), carro.getMarca());
     }
 

@@ -13,7 +13,6 @@ public class Historico extends Pedido {
     private int valorPago; // vai ter de ser calculado atraves da distancia percorrida e o preço/km
     private LocalDate dataViagem;
 
-
     /**
     * Construtor por omissão de Historico.
     */
@@ -26,8 +25,8 @@ public class Historico extends Pedido {
     /**
     * Construtor parametrizado de Historico.
     */
-    public Historico(int idPedido, int idCliente, int idProprietario, int idVeiculo, double newPosX, double newPosY, Time tempoQueDemora, int valorPago, LocalDate dataViagem) {
-        super(idPedido, idCliente, idProprietario, idVeiculo, newPosX, newPosY, tempoQueDemora);
+    public Historico(int idPedido, int idCliente, int idProprietario,String matricula, double oldPosX, double oldPosY, double newPosX, double newPosY, Time tempoQueDemora, int valorPago, LocalDate dataViagem) {
+        super(idPedido, idCliente, idProprietario, matricula,oldPosX,oldPosY, newPosX, newPosY, tempoQueDemora);
         this.valorPago = valorPago;
         this.dataViagem = dataViagem;
     }
@@ -42,11 +41,6 @@ public class Historico extends Pedido {
         this.dataViagem = umHistorico.getDataViagem();
     }
 
-    public Historico(Pedido umPedido, int valorPago, LocalDate dataViagem) {
-        super(umPedido);
-        this.valorPago = valorPago;
-        this.dataViagem = dataViagem;
-    }
 
     /**
     * Devolve o valor pago na viagem guardada neste histórico em valorPago.
