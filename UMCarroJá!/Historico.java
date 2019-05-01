@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Historico extends Pedido {
     
     //variáveis de instância
-    private int valorPago; // vai ter de ser calculado atraves da distancia percorrida e o preço/km
+    private double valorPago; // vai ter de ser calculado atraves da distancia percorrida e o preço/km
     private LocalDate dataViagem;
 
     /**
@@ -18,14 +18,22 @@ public class Historico extends Pedido {
     */
     public Historico() {
         super();
-        this.valorPago = -1;
+        this.valorPago = 0.0;
         this.dataViagem = LocalDate.now();
     }
-
+    
+    public Historico(Pedido p, double valorPago, LocalDate dataViagem){
+        super(p.getIdPedido(), p.getIdCliente(), p.getIdProprietario(), p.getMatricula(),
+            p.getOrigem(), p.getDestino(), p.getTempoQueDemora());
+        this.valorPago = valorPago;
+        this.dataViagem = dataViagem;
+        
+    }
+    
     /**
     * Construtor parametrizado de Historico.
     */
-    public Historico(int idPedido, int idCliente, int idProprietario,String matricula, double oldPosX, double oldPosY, double newPosX, double newPosY, Time tempoQueDemora, int valorPago, LocalDate dataViagem) {
+    public Historico(int idPedido, int idCliente, int idProprietario,String matricula, double oldPosX, double oldPosY, double newPosX, double newPosY, Time tempoQueDemora, double valorPago, LocalDate dataViagem) {
         super(idPedido, idCliente, idProprietario, matricula,oldPosX,oldPosY, newPosX, newPosY, tempoQueDemora);
         this.valorPago = valorPago;
         this.dataViagem = dataViagem;
@@ -46,7 +54,7 @@ public class Historico extends Pedido {
     * Devolve o valor pago na viagem guardada neste histórico em valorPago.
     * @return valor pago no Historico.
     */
-    public int getValorPago() {
+    public double getValorPago() {
         return valorPago;
     }
 
@@ -54,7 +62,7 @@ public class Historico extends Pedido {
     * Atualiza o valor pago na viagem guardada neste histórico em valorPago.
     * @param valorPago Novo valor pago do Historico.
     */
-    public void setValorPago(int valorPago) {
+    public void setValorPago(double valorPago) {
         this.valorPago = valorPago;
     }
 

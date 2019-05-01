@@ -175,12 +175,20 @@ public class UMCarroJa { // Vai ter o implements Comparator
         ((Proprietario)this.users.get(id)).setVeiculos(veiculos);
     }
 
-    public void aceitarPedido(Historico h){
-
-
+    public void aceitarPedido(Pedido p){
+        double valorPago = 0.0;
+        double dist = (p.getOrigem()).distanceTo(p.getDestino());
+        LocalDate dataViagem = LocalDate.now();
+        
+        User prop = getUser(p.getIdProprietario());
+        List<Veiculo> veiculos = ((Proprietario) prop).getVeiculos();
+        for(Veiculo v: veiculos){
+            if(v.getMatricula().equals(p.getMatricula())){
+                 valorPago = dist * v.getPrecoPorKm();
+            }
+        }
+        
+        Historico h = new Historico(p,valorPago,dataViagem);
+        this.viagens.put(h.getIdPedido(),h);
     }
-
-
 }
-
-
