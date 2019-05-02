@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=UserNaoeProprietarioException
+comment1.params=
+comment1.target=UserNaoeProprietarioException()
+comment1.text=\n\ Constructor\ vazio\ para\ a\ exce\u00C3\u00A7\u00C3\u00A3o\n
+comment2.params=msg
+comment2.target=UserNaoeProprietarioException(java.lang.String)
+comment2.text=\n\ Constructor\ standart\ para\ a\ exce\u00C3\u00A7\u00C3\u00A3o\n
+numComments=3

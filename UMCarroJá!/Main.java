@@ -28,6 +28,8 @@ public class Main{
 
             do{
                 switch(getOption()){
+                    case 0: sair = 0;
+                            break;
                     case 1:
                         List <Pedido> list= getListPedidosToProprietario(ucj,id);
                         imprimeListPedidos(ucj,list,id);
@@ -40,10 +42,14 @@ public class Main{
                         if (i == 0){
                             Pedido p = getPedidoFromPrint(id,ped,ucj);
                             ucj.aceitarPedido(p);
+                            System.out.println("Pedido aceite com sucesso.");
+                            progProprietario(id,ucj);
                         }
                         if (i == 1){
                             Pedido p = getPedidoFromPrint(id,ped,ucj);
                             list.remove(p);
+                            System.out.println("Pedido recusado com sucesso.");
+                            progProprietario(id,ucj);
                         }
                         else{System.out.println("Opção não encontrada");}
                         sair=0;
@@ -289,6 +295,9 @@ public class Main{
 
             do{
                 switch(getOption()){
+                    case 0: sair = 0;
+                            break;
+                    
                     case 1:
                         menuClienteSolicitaViagem(ucj,id);
                         sair=0;
