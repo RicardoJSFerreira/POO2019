@@ -184,7 +184,28 @@ public class Main{
         Veiculo v = new Carro(matricula,velocidade,precoPorKm,consumoPorKm,autonomiaMax,autonomia,x,y,tipoCombustivel,marca);
         ucj.adicionaCarro(v,id);
     }
-        public static List<Veiculo> imprimeListVeiculos(int id,UMCarroJa ucj){
+    
+    public static void imprimeVeiculo(Veiculo v){
+        
+        System.out.println("Matrícula: " + v.getMatricula() + ", Disponibilidade: " + v.getDisponivel() +  ", Preço por Km: " + v.getPrecoPorKm() 
+        + ", Consumo por Km" + v.getConsumoPorKm() + ", Classificação:" + v.getClassificacao() + "Autonomia: " + v.getAutonomia()
+        + " Autonomia Máxima: " + v.getAutonomiaMax()); 
+        
+    }
+    
+    public static void imprimeListV(List<Veiculo> l){
+        
+        int i = 0;
+        for (Veiculo v : l){
+            System.out.println("("+i+")" + "Matrícula: " + v.getMatricula() + ", Disponibilidade: " + v.getDisponivel() +  ", Preço por Km: " + v.getPrecoPorKm() 
+            + ", Consumo por Km" + v.getConsumoPorKm() + ", Classificação:" + v.getClassificacao() + "Autonomia: " + v.getAutonomia()
+            + " Autonomia Máxima: " + v.getAutonomiaMax());
+            i++;
+        }
+        
+    }
+    
+    public static List<Veiculo> imprimeListVeiculos(int id,UMCarroJa ucj){
             User p = ucj.getUser(id);
             List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
             int i=0;
@@ -218,6 +239,7 @@ public class Main{
             }
         }
     }
+    
     public static void imprimeListPedidos(UMCarroJa ucj, List<Pedido> list, int id){
         User prop = ucj.getUser(id);
         int i=0;
@@ -328,13 +350,13 @@ public class Main{
                 switch(getOption()){
                     case 0: progCliente(id,ucj);
 
-                    case 1: alugCarroMaisProx(ucj, id);
+                    case 1: alugCarroMaisProx(x,y,ucj, id);
                         sair = 0; break;
 
                     case 2: alugCarroBarato(ucj,id);
                         sair = 0; break;
 
-                    case 3: alugBaratoDist(ucj, id);
+                    case 3: alugBaratoDist(x,y,ucj, id);
                         sair = 0; break;
 
                     case 4: alugCarroEspecif(ucj, id);
@@ -348,31 +370,93 @@ public class Main{
                 }
             } while(sair == 1);
         }
-    public static void alugCarroMaisProx(UMCarroJa ucj, int id){
-
-        //implementar metodo que mostra a lista dos veï¿½culos mais prï¿½ximos
-
-
+        
+    public static void alugCarroMaisProx(int x, int y, UMCarroJa ucj, int id){
+        double dist = 100000;
+        List<Veiculo> l = ucj.getListTodosVeiculosDisponiveis(ucj.getListTodosVeiculos());
+        Ponto pontoC = new Ponto(x,y);
+        Veiculo vMaisProx =  null;
+        for (Veiculo v : l){
+            Ponto pontoV = v.getPosicao();
+            double newdist = pontoV.distanceTo(pontoC);
+            if (newdist <= dist) {vMaisProx = v; dist = newdist;}
+        }
+        System.out.println("O veículo mais próximo é"); imprimeVeiculo(vMaisProx); System.out.println(". Encontra-se à distância de" + dist);
+        
     }
 
     public static void alugCarroBarato(UMCarroJa ucj, int id){
-        //implementar metodo que apresenta o(s) carro(s) mais barato(s)
+        List<Veiculo> l = ucj.getListTodosVeiculosDisponiveis(ucj.getListTodosVeiculos());
+        Veiculo vMaisBarato = null;
+        double preco = 50.00;
+        for (Veiculo v : l){
+            double p = v.getPrecoPorKm();
+            if (p <= preco) {preco = p; vMaisBarato = v;}
+        }
+        
+        System.out.println("O veículo mais barato é"); imprimeVeiculo(vMaisBarato);
+        
     }
 
-    public static void alugBaratoDist(UMCarroJa ucj, int id){
+    public static void alugBaratoDist(int x, int y, UMCarroJa ucj, int id){
         System.out.println("Insira a distï¿½ncia que estï¿½ disposto a percorrer:");
-        int dist = getOption();
-        //implementar busca que apresente a lista de carros que estï¿½o dentro da distï¿½ncia referida
+        double dist = getOption(); //distância que está disposto a percorrer
+   
+        Ponto c = new Ponto(x,y); //ponto cliente atualmente
+        List<Veiculo> l = ucj.getListTodosVeiculosDisponiveis(ucj.getListTodosVeiculos()); //veiculos disponiveis
+        Veiculo vBaratoDist = null; //o veiculo mais barato dentro da distancia
+        double p = 50.00; //inicializar um preço que seja certamente mais alto que o primeiro que vai comparar
+        
+        for (Veiculo v : l){
+            double d = c.distanceTo(v.getPosicao());
+            if (d <= dist){ //se esta distÂncia for menor que a que o cliente está disposto a percorrer
+                if (v.getPrecoPorKm() < p){ //aí vê compara o preço para ficar com o mais barato
+                    vBaratoDist = v;
+                    p = v.getPrecoPorKm();
+                }
+            }
+            
+        }
+        
+        System.out.println("O veículo mais barato dentro da distância inserida é:"); imprimeVeiculo(vBaratoDist);
+        
     }
 
     public static void alugCarroEspecif(UMCarroJa ucj, int id){
-        //por marca? ou matrï¿½cula? ou outras opï¿½ï¿½es?
+        
+        List<Veiculo> l = ucj.getListTodosVeiculosDisponiveis(ucj.getListTodosVeiculos());
+        
+        System.out.println("A lista de veículos disponiveis:"); imprimeListV(l);
+        System.out.println("Indique o número do veículo que pretende alugar?");
+        Scanner sc = new Scanner(System.in);
+        int ped = sc.nextInt();
+        
+        Veiculo alugar = l.get(ped); //carro a alugar
+       
+        
     }
 
     public static void alugCarroAuton(UMCarroJa ucj, int id){
         System.out.println("Indique a autonomia desejada:");
         int aut = getOption();
-        //apresenta lista de carros com no minimo a autonomia desejada
+        
+        List<Veiculo> l = ucj.getListTodosVeiculosDisponiveis(ucj.getListTodosVeiculos());
+        List<Veiculo> nova = new ArrayList<Veiculo>();
+        
+        for (Veiculo v : l){
+            
+            if (v.getAutonomia() >= aut){
+                nova.add(v);
+            }
+        }
+        
+        System.out.println("A lista de veículos que correspondem à autonomia necessária:"); imprimeListV(nova);
+        System.out.println("Indique o número do veículo que pretende alugar?");
+        Scanner sc = new Scanner(System.in);
+        int ped = sc.nextInt();
+        
+        Veiculo alugar = nova.get(ped);
+        
     }
 
         public static void registo(UMCarroJa ucj){
@@ -443,7 +527,7 @@ public class Main{
                     existe = true;
                     //System.out.println("Encontrou o email");
                 }
-                else System.out.println("Email nÃ£o existente. Tente de novo.");
+                else System.out.println("Email não existente. Tente de novo.");
             }
             int id = ucj.getUserId(email);
             User u = ucj.getUser(id);
@@ -574,7 +658,7 @@ public class Main{
 
             do{
                 System.out.println("O que pretende fazer?");
-                System.out.println("(1) Login  (2) Registo  (3) Sair da aplicaÃ§Ã£o");
+                System.out.println("(1) Login  (2) Registo  (3) Sair da aplicação");
 
                 switch(getOption()){
                     case 1: loginMenu(ucj);
