@@ -33,7 +33,6 @@ public class Pedido implements Serializable {
         this.destino = new Ponto(newPosX,newPosY);
         this.tempoQueDemora = tempoQueDemora;
     }
-    
     public Pedido(int idPedido, int idCliente, int idProprietario, String matricula,Ponto oldPos,Ponto newPos, Time tempoQueDemora){
         this.idPedido = idPedido;
         this.idCliente = idCliente;

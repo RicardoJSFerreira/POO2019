@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -5,7 +6,7 @@ import java.util.Objects;
  * Classe genérica que representa um veículo.
  */
 
-public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas ainda n tenho a certwza
+public abstract class Veiculo implements Serializable { // vou ter de criar uma subclasse? Ja a criei mas ainda n tenho a certwza
     
     //variáveis de instância
     private String matricula;
@@ -63,6 +64,7 @@ public abstract class Veiculo{ // vou ter de criar uma subclasse? Ja a criei mas
         this.autonomiaMax = umVeiculo.getAutonomiaMax();
         this.autonomia = umVeiculo.getAutonomia();
         this.posicao = umVeiculo.getPosicao();
+
     }
 
     /**

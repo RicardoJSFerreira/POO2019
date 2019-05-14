@@ -1,10 +1,12 @@
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Carro extends Veiculo {
+public class Carro extends Veiculo implements Serializable {
     
     //variáveis de instância
     private String tipoCombustivel;
     private String marca;
+
 
     /**
     * Construtor por omissão de Carro.

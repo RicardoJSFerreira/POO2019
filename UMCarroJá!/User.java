@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.Objects;
 // para ter uma class de todos os users se fizer Users.clone fico com todos os proprietarios e todos os clientes tambem?
 // E faz sentido fazer isto assim?
 
-public abstract class User { // Perguntar se deve ser abstract ou nao  -> Se for abstract tenho de definir metodos nas subclasses penso eu, tenho d eir ver
+public abstract class User implements Serializable { // Perguntar se deve ser abstract ou nao  -> Se for abstract tenho de definir metodos nas subclasses penso eu, tenho d eir ver
     
     //variáveis de instância
     private  int idUser;

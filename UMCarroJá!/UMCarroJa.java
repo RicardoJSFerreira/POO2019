@@ -1,9 +1,10 @@
+import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class UMCarroJa { // Vai ter o implements Comparator
+public class UMCarroJa implements Serializable { // Vai ter o implements Comparator
     private Map<Integer, Pedido> viagens;
     private Map<Integer, User> users;
 
@@ -52,6 +53,26 @@ public class UMCarroJa { // Vai ter o implements Comparator
     public UMCarroJa clone() {
         return new UMCarroJa(this);
     }
+
+    public void guardaEstado(String nomeFicheiro)throws FileNotFoundException, IOException {
+        FileOutputStream fos = new FileOutputStream(nomeFicheiro);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(this);
+        oos.flush();
+        oos.close();
+    }
+    public static UMCarroJa loadEstado(String nomeFicheiro)throws FileNotFoundException,IOException,ClassNotFoundException{
+        FileInputStream fos = new FileInputStream(nomeFicheiro);
+        ObjectInputStream oos = new ObjectInputStream(fos);
+        UMCarroJa h = (UMCarroJa) oos.readObject();
+        oos.close();
+        return h;
+    }
+
+
+
+
+
     // Users
 
     public int getUserId(String email) {
@@ -96,6 +117,46 @@ public class UMCarroJa { // Vai ter o implements Comparator
         for(Pedido c : this.viagens.values())
             res.add(c.clone());
 
+        return res;
+    }
+    public List<Pedido> getListPedidos(){
+        List<Pedido> res = new ArrayList<Pedido>();
+        for(Pedido c : this.viagens.values()){
+
+            if(!(c instanceof Historico))
+                res.add(c.clone());
+        }
+
+        return res;
+    }
+    public List<Historico> getListHistoricos(){
+        List<Historico> res = new ArrayList<Historico>();
+        for( Pedido c : this.viagens.values()) {
+            if(c instanceof  Historico)
+            res.add(((Historico) c).clone());
+        }
+        return res;
+    }
+
+    public List<Historico> getListHistorico(int id, LocalDate begin, LocalDate end){
+        List<Historico> res = new ArrayList<Historico>();
+        List<Historico> l = getListHistoricos();
+        for (Historico historico: l){
+            if(((historico.getIdCliente()== id) || (historico.getIdProprietario())==id) && (((Historico) historico).getDataViagem().isAfter(begin)) && (((Historico) historico).getDataViagem().isBefore(end))) {
+                res.add((Historico) historico);
+            }
+        }
+        return res;
+    }
+
+    public List<Pedido> getListPedidosToProprietario(int id){
+        List<Pedido> res = new ArrayList<Pedido>();
+        List<Pedido> l = getListPedidos();
+        for (Pedido pedido: l){
+            if( pedido.getIdProprietario()==id ) {
+                res.add(pedido);
+            }
+        }
         return res;
     }
     // Veiculos
@@ -169,26 +230,45 @@ public class UMCarroJa { // Vai ter o implements Comparator
         List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
         for (Veiculo v: veiculos) {
             if(v.getMatricula().equals(matricula)){
-                v.setConsumoPorKm(preco);
+                v.setPrecoPorKm(preco);
             }
         }
+        System.out.println(veiculos);
         ((Proprietario)this.users.get(id)).setVeiculos(veiculos);
     }
 
     public void aceitarPedido(Pedido p){
+
         double valorPago = 0.0;
         double dist = (p.getOrigem()).distanceTo(p.getDestino());
         LocalDate dataViagem = LocalDate.now();
-        
+
         User prop = getUser(p.getIdProprietario());
         List<Veiculo> veiculos = ((Proprietario) prop).getVeiculos();
         for(Veiculo v: veiculos){
             if(v.getMatricula().equals(p.getMatricula())){
-                 valorPago = dist * v.getPrecoPorKm();
+                valorPago = dist * v.getPrecoPorKm();
             }
         }
-        
+
         Historico h = new Historico(p,valorPago,dataViagem);
+        System.out.println(h);
         this.viagens.put(h.getIdPedido(),h);
     }
+    public Veiculo getVeiculoByID(int idVeiculo, int idUser){
+        User u = (Proprietario)getUser(idUser);
+        Veiculo v =((Proprietario) u).getVeiculos().get(idVeiculo);
+        return v;
+    }
+    public String getVeiculoMatricula(int idVeiculo, int idUser){
+        User u = (Proprietario)getUser(idUser);
+        Veiculo v =((Proprietario) u).getVeiculos().get(idVeiculo);
+        return v.getMatricula();
+    }
+    public void recusaPedido(Pedido p){
+        this.viagens.remove(p.getIdPedido());
+    }
+
 }
+
+
