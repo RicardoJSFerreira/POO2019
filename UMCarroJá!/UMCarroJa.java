@@ -61,7 +61,6 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         oos.flush();
         oos.close();
     }
-    
     public static UMCarroJa loadEstado(String nomeFicheiro)throws FileNotFoundException,IOException,ClassNotFoundException{
         FileInputStream fos = new FileInputStream(nomeFicheiro);
         ObjectInputStream oos = new ObjectInputStream(fos);
@@ -69,8 +68,13 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         oos.close();
         return h;
     }
-    
+
+
+
+
+
     // Users
+
     public int getUserId(String email) {
         for (User c : this.users.values()) {
             if (c.getEmail().equals(email)) return c.getUserId();
@@ -115,7 +119,6 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
 
         return res;
     }
-    
     public List<Pedido> getListPedidos(){
         List<Pedido> res = new ArrayList<Pedido>();
         for(Pedido c : this.viagens.values()){
@@ -126,7 +129,6 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
 
         return res;
     }
-    
     public List<Historico> getListHistoricos(){
         List<Historico> res = new ArrayList<Historico>();
         for( Pedido c : this.viagens.values()) {
@@ -157,7 +159,6 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         }
         return res;
     }
-    
     // Veiculos
     public void addUser(User user) {
         this.users.put(user.getUserId(), user);
@@ -166,6 +167,9 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
     public void addViagem(Pedido pedido) {
         this.viagens.put(pedido.getIdPedido(), pedido);
     }
+
+
+
 
     public boolean pedidoExiste(Pedido value) {
         if (this.viagens.containsValue(value)) return true;
@@ -177,10 +181,13 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         else return false;
     }
 
+
     public void setNewClientLocation(int id, int x, int y){
         Ponto p = new Ponto(x,y);
         ((Cliente) this.users.get(id)).setPosicao(p);
     }
+
+
 
     public void adicionaCarro(Veiculo v, int id){// { // Acho que nao é preciso pq nao chega aqui se n for um prop
         //if (verificaTipoUser(id) != 1) throw new UserNaoeProprietarioException("Está logado como um cliente");
@@ -190,6 +197,7 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         ((Proprietario)this.users.get(id)).setVeiculos(veiculos);
 
     }
+
 
     public void abastecerVeiculo(int id, String matricula, int comb){ // Funciona
         User p = getUser(id);
@@ -248,42 +256,54 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         System.out.println(h);
         this.viagens.put(h.getIdPedido(),h);
     }
-    
     public Veiculo getVeiculoByID(int idVeiculo, int idUser){
         User u = (Proprietario)getUser(idUser);
         Veiculo v =((Proprietario) u).getVeiculos().get(idVeiculo);
         return v;
     }
-    
     public String getVeiculoMatricula(int idVeiculo, int idUser){
         User u = (Proprietario)getUser(idUser);
         Veiculo v =((Proprietario) u).getVeiculos().get(idVeiculo);
         return v.getMatricula();
     }
-    
     public void recusaPedido(Pedido p){
         this.viagens.remove(p.getIdPedido());
     }
 
     public List<Veiculo> getListTodosVeiculos(){
         List<Veiculo> res = new ArrayList<Veiculo>();
-        for(User u: this.users.values()){
+        for(User u : this.users.values()){
             if (u instanceof Proprietario){
-                res.addAll(((Proprietario) u).getVeiculos());
+            res.addAll(((Proprietario) u).getVeiculos());
             }
         }
-        ((ArrayList<Veiculo>)res).clone();
+        ((ArrayList<Veiculo>) res).clone();
         return res;
     }
-    
-    public List <Veiculo> getListTodosVeiculosDisponiveis(List<Veiculo> l){
+    public List<Veiculo> getListTodosVeiculosDisponiveis(List<Veiculo> l, Ponto origem, Ponto destino){
         List<Veiculo> res = new ArrayList<Veiculo>();
         for(Veiculo v : l){
-            if (v.getDisponivel() == true) res.add(v);
+            if(v.getDisponivel()==true && verificaAutonomiaParaViagem(v,origem,destino)) res.add(v);
         }
         return res;
     }
-    
+
+    public  int getProprietarioFromMatricula(String matricula) {
+        List<Veiculo> l = new ArrayList<Veiculo>();
+        for (User u : this.users.values()) {
+            if (u instanceof Proprietario) {
+                if(((Proprietario) u).getVeiculo(matricula)!=null) return u.getUserId();
+            }
+        }
+        return -1;
+    }
+    public boolean verificaAutonomiaParaViagem(Veiculo v, Ponto origem, Ponto destino){
+        double d = origem.distanceTo(destino);
+        if(v.getConsumoPorKm()*d <v.getAutonomia()) return true;
+
+        return false;
+    }
+
 }
 
 
