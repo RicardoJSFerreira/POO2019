@@ -280,6 +280,7 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         ((ArrayList<Veiculo>) res).clone();
         return res;
     }
+    
     public List<Veiculo> getListTodosVeiculosDisponiveis(List<Veiculo> l, Ponto origem, Ponto destino){
         List<Veiculo> res = new ArrayList<Veiculo>();
         for(Veiculo v : l){
@@ -297,6 +298,7 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         }
         return -1;
     }
+    
     public boolean verificaAutonomiaParaViagem(Veiculo v, Ponto origem, Ponto destino){
         double d = origem.distanceTo(destino);
         if(v.getConsumoPorKm()*d <v.getAutonomia()) return true;
@@ -304,6 +306,11 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         return false;
     }
 
+    public double custoEstimadoViagem(Veiculo v, Ponto origem, Ponto destino){
+        double dist = origem.distanceTo(destino);
+        double custoEstimado = dist * v.getPrecoPorKm();
+        return custoEstimado;
+    }
 }
 
 

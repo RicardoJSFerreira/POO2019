@@ -261,7 +261,7 @@ public class Main{
                 totalFaturado=(((Historico) historico).getValorPago())+totalFaturado;
             }
         }
-        System.out.println("veiculo com a matricula "+ matricula +" faturou: "+totalFaturado + " euros");
+        System.out.println("Veículo com a matricula "+ matricula +" faturou: "+totalFaturado + " euros");
 
     }
 
@@ -380,9 +380,12 @@ public class Main{
             double newdist = pontoV.distanceTo(origem);
             if (newdist <= dist) {vMaisProx = v; dist = newdist;}
         }
+        double precoEstimado = ucj.custoEstimadoViagem(vMaisProx,origem,destino);
+        
         System.out.println("O veï¿½culo mais prï¿½ximo ï¿½");
         imprimeVeiculo(vMaisProx);
         System.out.println(". Encontra-se ï¿½ distï¿½ncia de" + dist);
+        System.out.println(". O preço estimado da viagem é de" + precoEstimado + ".");
         System.out.println("\n Pretende (0) Aceitar ou (1) Recusar?");
             int sair = 1;
             do {
@@ -408,16 +411,18 @@ public class Main{
 
     public static void alugCarroBarato(Ponto origem, Ponto destino,UMCarroJa ucj, int idCliente){
         Scanner sc = new Scanner(System.in);
-            List<Veiculo> l = ucj.getListTodosVeiculosDisponiveis(ucj.getListTodosVeiculos(),origem,destino);
+        List<Veiculo> l = ucj.getListTodosVeiculosDisponiveis(ucj.getListTodosVeiculos(),origem,destino);
         Veiculo vMaisBarato = null;
         double preco = 50.00;
         for (Veiculo v : l){
             double p = v.getPrecoPorKm();
             if (p <= preco) {preco = p; vMaisBarato = v;}
         }
+        double precoEstimado = ucj.custoEstimadoViagem(vMaisBarato,origem,destino);
         double dist = origem.distanceTo(vMaisBarato.getPosicao());
         imprimeVeiculo(vMaisBarato);
         System.out.println(". Encontra-se ï¿½ distï¿½ncia de" + dist);
+        System.out.println(". O preço estimado da viagem é de" + precoEstimado + ".");
         System.out.println("\n Pretende (0) Aceitar ou (1) Recusar?");
         int sair = 1;
         do {
@@ -460,9 +465,11 @@ public class Main{
             }
 
         }
-         dist = origem.distanceTo(vBaratoDist.getPosicao());
+        double precoEstimado = ucj.custoEstimadoViagem(vBaratoDist,origem,destino);
+        dist = origem.distanceTo(vBaratoDist.getPosicao());
         imprimeVeiculo(vBaratoDist);
         System.out.println(". Encontra-se ï¿½ distï¿½ncia de" + dist);
+        System.out.println(". O preço estimado da viagem é de" + precoEstimado + ".");
         System.out.println("\n Pretende (0) Aceitar ou (1) Recusar?");
         int sair = 1;
         do {
@@ -497,10 +504,11 @@ public class Main{
         int ped = sc.nextInt();
 
         Veiculo vParaAlugar = l.get(ped); //carro a alugar
-
+        double precoEstimado = ucj.custoEstimadoViagem(vParaAlugar,origem,destino);
         double dist = origem.distanceTo(vParaAlugar.getPosicao());
         imprimeVeiculo(vParaAlugar);
         System.out.println(". Encontra-se ï¿½ distï¿½ncia de" + dist);
+        System.out.println(". O preço estimado da viagem é de" + precoEstimado + ".");
         System.out.println("\n Pretende (0) Aceitar ou (1) Recusar?");
         int sair = 1;
         do {
@@ -521,8 +529,6 @@ public class Main{
                     break;
             }
         } while(sair == 1);
-
-
 
     }
 
@@ -546,10 +552,11 @@ public class Main{
         int ped = sc.nextInt();
 
         Veiculo vParaAlugar = nova.get(ped);
-
+        double precoEstimado = ucj.custoEstimadoViagem(vParaAlugar,origem,destino);
         double dist = origem.distanceTo(vParaAlugar.getPosicao());
         imprimeVeiculo(vParaAlugar);
         System.out.println(". Encontra-se ï¿½ distï¿½ncia de" + dist);
+        System.out.println(". O preço estimado da viagem é de" + precoEstimado + ".");
         System.out.println("\n Pretende (0) Aceitar ou (1) Recusar?");
         int sair = 1;
         do {
