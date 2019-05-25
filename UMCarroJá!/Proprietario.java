@@ -8,21 +8,11 @@ import java.util.Objects;
 public class Proprietario extends User implements Serializable {
 
     //variáveis de instância
-    private int classificacao;
     private List<Veiculo> veiculos;
 
-    /**
-     * Construtor por omissão de Proprietario.
-     * @param id
-     * @param email
-     * @param nome
-     * @param pass
-     * @param morada
-     * @param dataNascimento
-     */
-    public Proprietario(Integer id, String email, String nome, String pass, String morada, LocalDate dataNascimento) {
+
+    public Proprietario() {
         super();
-        this.classificacao = 0;
         this.veiculos = new ArrayList<Veiculo>();
     }
 
@@ -31,13 +21,11 @@ public class Proprietario extends User implements Serializable {
      */
     public Proprietario(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento, int classificacao, ArrayList<Veiculo> listVeiculos ) {
         super(idUser,email, nome, password, morada, dataNascimento);
-        this.classificacao = classificacao;
         this.veiculos = new ArrayList<Veiculo>(listVeiculos);
     }
 
     public Proprietario(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento) {
         super(idUser,email, nome, password, morada, dataNascimento);
-        this.classificacao = -1;
         this.veiculos = new ArrayList<Veiculo>();
     }
 
@@ -47,26 +35,10 @@ public class Proprietario extends User implements Serializable {
      */
     public Proprietario(Proprietario umProprietario) {
         super(umProprietario);
-        this.classificacao = umProprietario.getClassificacao();
         this.veiculos = umProprietario.getVeiculos();
 
     }
 
-    /**
-     * Devolve a classificação do Proprietario em classificacao.
-     * @return classificação do Proprietario.
-     */
-    public int getClassificacao() {
-        return classificacao;
-    }
-
-    /**
-     * Atualiza a classificação do Proprietario em classificacao.
-     * @param classificacao Nova classificação do Proprietario.
-     */
-    public void setClassificacao(int classificacao) {
-        this.classificacao = classificacao;
-    }
 
     /**
      * Devolve a lista de Veículo(s) do Proprietario em veiculos.
@@ -74,7 +46,7 @@ public class Proprietario extends User implements Serializable {
      */
     public List<Veiculo> getVeiculos() {
         List<Veiculo> res = new ArrayList<>();
-        for(Veiculo s : veiculos) {
+        for(Veiculo s : this.veiculos) {
             res.add(s);
         }
         return res;
@@ -82,11 +54,11 @@ public class Proprietario extends User implements Serializable {
 
     /**
      * Atualiza a lista de Veiculo(s) do Proprietario em veiculos.
-     * @param veiculos Nova lista de veículos do Proprietario.
+     * @param veic Nova lista de veículos do Proprietario.
      */
-    public void setVeiculos(List<Veiculo> veiculos) {
+    public void setVeiculos(List<Veiculo> veic) {
         this.veiculos = new ArrayList<Veiculo>();
-        for(Veiculo s : veiculos) {
+        for(Veiculo s : veic) {
             this.veiculos.add(s);
         }
     }
@@ -97,12 +69,19 @@ public class Proprietario extends User implements Serializable {
      * @param o O Proprietario que é comparado com o recetor.
      * @return Booleano true ou false.
      */
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Proprietario)) return false;
         if (!super.equals(o)) return false;
         Proprietario that = (Proprietario) o;
-        return getClassificacao() == that.getClassificacao();
+        return Objects.equals(getVeiculos(), that.getVeiculos());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getVeiculos());
     }
 
     /**
@@ -114,7 +93,6 @@ public class Proprietario extends User implements Serializable {
         return
                 super.toString()+"Proprietario{" +
                         "veiculos " +veiculos +
-                        "classificacao=" + classificacao +
                         '}';
     }
 
@@ -130,5 +108,9 @@ public class Proprietario extends User implements Serializable {
             if (v.getMatricula().equals(matricula)) return v.clone();
         }
         return null;
+    }
+    public void classificaVeiculo (String matricula,int classificacao){
+        int soma = 0;
+
     }
 }

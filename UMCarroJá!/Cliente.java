@@ -13,7 +13,6 @@ public class Cliente extends User implements Serializable {
     
     //variáveis de instância
     private Ponto posicao;
-    private int classificacao;
 
     /**
     * Construtor por omissão de Cliente.
@@ -21,24 +20,25 @@ public class Cliente extends User implements Serializable {
     public Cliente() {
         super();
         this.posicao = new Ponto(0,0);
-        this.classificacao = -1;
     }
 
     /**
     * Construtor parametrizado de Cliente.
     */
     public Cliente(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento, Double newPosX, Double newPosY, int classificacao) {
-        super(idUser,email, nome, password, morada, dataNascimento);
+        super(idUser,email, nome, password, morada, dataNascimento,classificacao);
         this.posicao = new Ponto<Double>(newPosX, newPosY);
-        this.classificacao = classificacao;
     }
 
     public Cliente(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento, Double newPosX, Double newPosY) {
         super(idUser,email, nome, password, morada, dataNascimento);
         this.posicao = new Ponto<Double>(newPosX, newPosY);
-        this.classificacao = -1;
     }
 
+    public Cliente(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento,Ponto ponto) {
+        super(idUser,email, nome, password, morada, dataNascimento);
+        this.posicao = ponto;
+    }
     /**
     * Construtor de cópia de Cliente.
     * Aceita como parâmetro outro Cliente e utiliza os métodos de acesso aos valores das variáveis de instância.
@@ -46,7 +46,6 @@ public class Cliente extends User implements Serializable {
     public Cliente(Cliente umCliente) {
         super(umCliente);
         this.posicao = umCliente.getPosicao();
-        this.classificacao = umCliente.getClassificacao();
     }
 
     /**
@@ -65,21 +64,6 @@ public class Cliente extends User implements Serializable {
         this.posicao = posicao;
     }
 
-    /**
-    * Devolve a classificação do Cliente em classificacao.
-    * @return classificação do Cliente.
-    */
-    public int getClassificacao() {
-        return classificacao;
-    }
-
-    /**
-    * Atualiza a classificação do Cliente em classificacao.
-    * @param classificacao Nova classificação do Cliente.
-    */
-    public void setClassificacao(int classificacao) {
-        this.classificacao = classificacao;
-    }
 
     /**
     * Implementação do método de igualdade entre dois Cliente.

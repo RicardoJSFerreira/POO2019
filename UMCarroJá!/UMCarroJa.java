@@ -2,11 +2,14 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 
 public class UMCarroJa implements Serializable { // Vai ter o implements Comparator
     private Map<Integer, Pedido> viagens;
     private Map<Integer, User> users;
+    private Map<String, Veiculo> veiculos;
 
 
     public UMCarroJa() {
@@ -54,14 +57,15 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         return new UMCarroJa(this);
     }
 
-    public void guardaEstado(String nomeFicheiro)throws FileNotFoundException, IOException {
+    public void guardaEstado(String nomeFicheiro) throws FileNotFoundException, IOException {
         FileOutputStream fos = new FileOutputStream(nomeFicheiro);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(this);
         oos.flush();
         oos.close();
     }
-    public static UMCarroJa loadEstado(String nomeFicheiro)throws FileNotFoundException,IOException,ClassNotFoundException{
+
+    public static UMCarroJa loadEstado(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fos = new FileInputStream(nomeFicheiro);
         ObjectInputStream oos = new ObjectInputStream(fos);
         UMCarroJa h = (UMCarroJa) oos.readObject();
@@ -69,31 +73,132 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         return h;
     }
 
+    public static UMCarroJa importaCSV(String fich)
+            throws FileNotFoundException, IOException {
+
+        UMCarroJa ucj = new UMCarroJa();
+        List<String> linhas = UMCarroJa.lerCSV(fich);
+        linhas.forEach(s -> ucj.csv2UCJ(s));
+        return ucj;
+    }
+
+    private static List<String> lerCSV(String fich) throws FileNotFoundException, IOException {
+        List<String> linhas = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new FileReader(fich));
+        String linha;
+
+        while ((linha = br.readLine()) != null) {
+            linhas.add(linha);
+        }
+        br.close();
+        return linhas;
+    }
 
 
+    private void csv2UCJ(String csv) {
+
+            UMCarroJa ucj = new UMCarroJa();
+            String[] atributos;
+            String tipo;
+            String[] divide = csv.split(":|\\,",2);
+            tipo = divide[0];
+
+        // é preciso testar as possíveis excepções de as strings que forem lidas
+        // não estarem no formato adequado
+        // Devem ser testadas as excepções e, neste caso, opta-se por retornar null.
+
+        String nome;
+        int nif;
+        String email;
+        String morada;
+        String pass = "pass";
+        LocalDate dataNascimento;
+
+        switch (tipo) {
+            case "NovoProp":
+                atributos = divide[1].split(",");
+                nome = atributos[0];
+                nif = Integer.parseInt(atributos[1]);
+                email = atributos[2];
+                morada = atributos[3];
+                dataNascimento = LocalDate.now();
+                Proprietario p = new Proprietario(nif, email, nome, pass, morada, dataNascimento);
+                this.addUser(p);
+
+                break;
+            case "NovoCliente":
+                atributos = divide[1].split(",");
+                nome = atributos[0];
+                nif = Integer.parseInt(atributos[1]);
+                email = atributos[2];
+                morada = atributos[3];
+                dataNascimento = LocalDate.now();
+                Ponto posicaoCLiente = new Ponto(Double.parseDouble(atributos[4]), Double.parseDouble(atributos[4]));
+                Cliente c = new Cliente(nif, email, nome, pass, morada, dataNascimento, posicaoCLiente);
+                this.addUser(c);
+                break;
+            case "NovoCarro":
+                atributos = divide[1].split(",");
+                String tipoCombustivel = atributos[0];
+                String marca = atributos[1];
+                String matricula = atributos[2];
+                int nifProp = Integer.parseInt(atributos[3]);
+                int velocidadeMedia = Integer.parseInt(atributos[4]);
+                double precoKM = Double.parseDouble(atributos[5]);
+                double consumoKM = Double.parseDouble(atributos[6]);
+                int autonomia = Integer.parseInt(atributos[7]);
+                Ponto posicaoVeiculo = new Ponto(Double.parseDouble(atributos[8]), Double.parseDouble(atributos[9]));
+                Veiculo car = new Carro(matricula, nifProp, velocidadeMedia, precoKM, consumoKM, autonomia, autonomia, posicaoVeiculo, tipoCombustivel, marca);
+                this.addCarro(nifProp, car);
+                break;
+            case "Aluguer":
+                atributos = divide[1].split(",");
+                int nifCliente = Integer.parseInt(atributos[0]);
+                Ponto posicaoDestino = new Ponto(Double.parseDouble(atributos[1]), Double.parseDouble(atributos[2]));
+                tipoCombustivel = atributos[3];
+                String prefere = atributos[4];
+                this.geraPedido(nifCliente, posicaoDestino, tipoCombustivel, prefere);
+                break;
+            case "Classificar":
+                atributos = divide[1].split(",");
+                int classificacao = Integer.parseInt(atributos[1]);
+                if (getProprietarioFromMatricula(atributos[0]) > 0) {
+                    int propi = getProprietarioFromMatricula(atributos[0]);
+                    matricula = atributos[0];
+                    this.addClassificacaoVeiculo(propi, matricula, classificacao);
+                } else if (this.users.containsKey(Integer.parseInt(atributos[0]))) {
+                    int user = Integer.parseInt(atributos[0]);
+                    this.addClassificacaoUser(user, classificacao);
+                }
+                break;
+
+
+        }
+
+    }
 
 
     // Users
 
     public int getUserId(String email) {
         for (User c : this.users.values()) {
-            if (c.getEmail().equals(email)) return c.getUserId();
+            if (c.getEmail().equals(email)) return c.getNif();
         }
         return -1;
     }
 
     public User getUser(int id) {
-    return this.users.get(id).clone();
+        return this.users.get(id).clone();
     }
 
     public Map<Integer, User> getTodosUsers() {
         return this.users.values().stream().
-                collect(Collectors.toMap((c) -> c.getUserId(), (c) -> c.clone()));
+                collect(Collectors.toMap((c) -> c.getNif(), (c) -> c.clone()));
     }
 
-    public List<User> getListUsers(){
+    public List<User> getListUsers() {
         List<User> res = new ArrayList<User>();
-        for(User c : this.users.values())
+        for (User c : this.users.values())
             res.add(c.clone());
 
         return res;
@@ -112,64 +217,84 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
                 collect(Collectors.toMap((c) -> c.getIdPedido(), (c) -> c.clone()));
     }
 
-    public List<Pedido> getListViagens(){
+    public List<Pedido> getListViagens() {
         List<Pedido> res = new ArrayList<Pedido>();
-        for(Pedido c : this.viagens.values())
+        for (Pedido c : this.viagens.values())
             res.add(c.clone());
 
         return res;
     }
-    public List<Pedido> getListPedidos(){
-        List<Pedido> res = new ArrayList<Pedido>();
-        for(Pedido c : this.viagens.values()){
 
-            if(!(c instanceof Historico))
+    public List<Pedido> getListPedidos() {
+        List<Pedido> res = new ArrayList<Pedido>();
+        for (Pedido c : this.viagens.values()) {
+
+            if (!(c instanceof Historico))
                 res.add(c.clone());
         }
 
         return res;
     }
-    public List<Historico> getListHistoricos(){
+
+    public List<Historico> getListHistoricos() {
         List<Historico> res = new ArrayList<Historico>();
-        for( Pedido c : this.viagens.values()) {
-            if(c instanceof  Historico)
-            res.add(((Historico) c).clone());
+        for (Pedido c : this.viagens.values()) {
+            if (c instanceof Historico)
+                res.add(((Historico) c).clone());
         }
         return res;
     }
 
-    public List<Historico> getListHistorico(int id, LocalDate begin, LocalDate end){
+    public List<Historico> getListHistorico(int id, LocalDate begin, LocalDate end) {
         List<Historico> res = new ArrayList<Historico>();
         List<Historico> l = getListHistoricos();
-        for (Historico historico: l){
-            if(((historico.getIdCliente()== id) || (historico.getIdProprietario())==id) && (((Historico) historico).getDataViagem().isAfter(begin)) && (((Historico) historico).getDataViagem().isBefore(end))) {
+        for (Historico historico : l) {
+            if (((historico.getIdCliente() == id) || (historico.getIdProprietario()) == id) && (((Historico) historico).getDataViagem().isAfter(begin)) && (((Historico) historico).getDataViagem().isBefore(end))) {
                 res.add((Historico) historico);
             }
         }
         return res;
     }
 
-    public List<Pedido> getListPedidosToProprietario(int id){
+    public List<Pedido> getListPedidosToProprietario(int id) {
         List<Pedido> res = new ArrayList<Pedido>();
         List<Pedido> l = getListPedidos();
-        for (Pedido pedido: l){
-            if( pedido.getIdProprietario()==id ) {
+        for (Pedido pedido : l) {
+            if (pedido.getIdProprietario() == id) {
                 res.add(pedido);
             }
         }
         return res;
     }
+
     // Veiculos
     public void addUser(User user) {
-        this.users.put(user.getUserId(), user);
+        this.users.put(user.getNif(), user);
     }
 
     public void addViagem(Pedido pedido) {
         this.viagens.put(pedido.getIdPedido(), pedido);
     }
 
+    public void addCarro(int nifProp, Veiculo v) {
+        User p = getUser(nifProp);
+        List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
+        veiculos.add(v);
+        ((Proprietario) this.users.get(nifProp)).setVeiculos(veiculos);
+    }
+
+    public void addClassificacaoUser(int nif, int cla) {
+        this.users.get(nif).adicionaClassificacao(cla);
+    }
+
+    public void addClassificacaoVeiculo(int prop, String matricula, int classificacao) {
+        ((Proprietario) this.users.get(prop)).classificaVeiculo(matricula, classificacao);
+    }
 
 
+    public void geraPedido(int nifCliente, Ponto posicaoDestino, String tipoCombustivel, String prefere) {
+
+    }
 
     public boolean pedidoExiste(Pedido value) {
         if (this.viagens.containsValue(value)) return true;
@@ -182,63 +307,52 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
     }
 
 
-    public void setNewClientLocation(int id, int x, int y){
-        Ponto p = new Ponto(x,y);
+    public void setNewClientLocation(int id, int x, int y) {
+        Ponto p = new Ponto(x, y);
         ((Cliente) this.users.get(id)).setPosicao(p);
     }
 
 
-
-    public void adicionaCarro(Veiculo v, int id){// { // Acho que nao é preciso pq nao chega aqui se n for um prop
-        //if (verificaTipoUser(id) != 1) throw new UserNaoeProprietarioException("Está logado como um cliente");
-        User p = getUser(id);
-        List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
-        veiculos.add(v);
-        ((Proprietario)this.users.get(id)).setVeiculos(veiculos);
-
-    }
-
-
-    public void abastecerVeiculo(int id, String matricula, int comb){ // Funciona
+    public void abastecerVeiculo(int id, String matricula, int comb) { // Funciona
         User p = getUser(id);
         List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
 
-        for (Veiculo v: veiculos) {
-            if(v.getMatricula().equals(matricula)){
+        for (Veiculo v : veiculos) {
+            if (v.getMatricula().equals(matricula)) {
                 int aut = v.getAutonomia();
-                if((aut+comb)>v.getAutonomiaMax())
+                if ((aut + comb) > v.getAutonomiaMax())
                     v.setAutonomia(v.getAutonomiaMax());
 
-                else v.setAutonomia(aut+comb);
+                else v.setAutonomia(aut + comb);
             }
         }
-        ((Proprietario)this.users.get(id)).setVeiculos(veiculos);
+        ((Proprietario) this.users.get(id)).setVeiculos(veiculos);
     }
 
-    public void sinalizarVeiculoComoDisponivel(int id, String matricula){
+    public void sinalizarVeiculoComoDisponivel(int id, String matricula) {
         User p = getUser(id);
         List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
-        for (Veiculo v: veiculos) {
-            if(v.getMatricula().equals(matricula)){
-            v.setDisponivel(true);
+        for (Veiculo v : veiculos) {
+            if (v.getMatricula().equals(matricula)) {
+                v.setDisponivel(true);
             }
         }
-        ((Proprietario)this.users.get(id)).setVeiculos(veiculos);
+        ((Proprietario) this.users.get(id)).setVeiculos(veiculos);
     }
 
-    public void alterarPrecoPorKm(int id, String matricula, double preco){
+    public void alterarPrecoPorKm(int id, String matricula, double preco) {
         User p = getUser(id);
         List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
-        for (Veiculo v: veiculos) {
-            if(v.getMatricula().equals(matricula)){
+        for (Veiculo v : veiculos) {
+            if (v.getMatricula().equals(matricula)) {
                 v.setPrecoPorKm(preco);
             }
         }
         System.out.println(veiculos);
-        ((Proprietario)this.users.get(id)).setVeiculos(veiculos);
+        ((Proprietario) this.users.get(id)).setVeiculos(veiculos);
     }
 
-    public void aceitarPedido(Pedido p){
+    public void aceitarPedido(Pedido p) {
 
         double valorPago = 0.0;
         double dist = (p.getOrigem()).distanceTo(p.getDestino());
@@ -246,64 +360,74 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
 
         User prop = getUser(p.getIdProprietario());
         List<Veiculo> veiculos = ((Proprietario) prop).getVeiculos();
-        for(Veiculo v: veiculos){
-            if(v.getMatricula().equals(p.getMatricula())){
+        for (Veiculo v : veiculos) {
+            if (v.getMatricula().equals(p.getMatricula())) {
                 valorPago = dist * v.getPrecoPorKm();
             }
         }
 
-        Historico h = new Historico(p,valorPago,dataViagem);
+        Historico h = new Historico(p, valorPago, dataViagem);
         System.out.println(h);
-        this.viagens.put(h.getIdPedido(),h);
+        this.viagens.put(h.getIdPedido(), h);
     }
-    public Veiculo getVeiculoByID(int idVeiculo, int idUser){
-        User u = (Proprietario)getUser(idUser);
-        Veiculo v =((Proprietario) u).getVeiculos().get(idVeiculo);
+
+    public Veiculo getVeiculoByID(int idVeiculo, int idUser) {
+        User u = (Proprietario) getUser(idUser);
+        Veiculo v = ((Proprietario) u).getVeiculos().get(idVeiculo);
         return v;
     }
-    public String getVeiculoMatricula(int idVeiculo, int idUser){
-        User u = (Proprietario)getUser(idUser);
-        Veiculo v =((Proprietario) u).getVeiculos().get(idVeiculo);
+
+    public String getVeiculoMatricula(int idVeiculo, int idUser) {
+        User u = (Proprietario) getUser(idUser);
+        Veiculo v = ((Proprietario) u).getVeiculos().get(idVeiculo);
         return v.getMatricula();
     }
-    public void recusaPedido(Pedido p){
+
+    public void recusaPedido(Pedido p) {
         this.viagens.remove(p.getIdPedido());
     }
 
-    public List<Veiculo> getListTodosVeiculos(){
+    public List<Veiculo> getListTodosVeiculos() {
         List<Veiculo> res = new ArrayList<Veiculo>();
-        for(User u : this.users.values()){
-            if (u instanceof Proprietario){
-            res.addAll(((Proprietario) u).getVeiculos());
+        for (User u : this.users.values()) {
+            if (u instanceof Proprietario) {
+                res.addAll(((Proprietario) u).getVeiculos());
             }
         }
         ((ArrayList<Veiculo>) res).clone();
         return res;
     }
-    public List<Veiculo> getListTodosVeiculosDisponiveis(List<Veiculo> l, Ponto origem, Ponto destino){
+
+    public List<Veiculo> getListTodosVeiculosDisponiveis(List<Veiculo> l, Ponto origem, Ponto destino) {
         List<Veiculo> res = new ArrayList<Veiculo>();
-        for(Veiculo v : l){
-            if(v.getDisponivel()==true && verificaAutonomiaParaViagem(v,origem,destino)) res.add(v);
+        for (Veiculo v : l) {
+            if (v.getDisponivel() == true && verificaAutonomiaParaViagem(v, origem, destino)) res.add(v);
         }
         return res;
     }
 
-    public  int getProprietarioFromMatricula(String matricula) {
+    public int getProprietarioFromMatricula(String matricula) {
         List<Veiculo> l = new ArrayList<Veiculo>();
         for (User u : this.users.values()) {
             if (u instanceof Proprietario) {
-                if(((Proprietario) u).getVeiculo(matricula)!=null) return u.getUserId();
+                if (((Proprietario) u).getVeiculo(matricula) != null) return u.getNif();
             }
         }
         return -1;
     }
-    public boolean verificaAutonomiaParaViagem(Veiculo v, Ponto origem, Ponto destino){
+
+    public boolean verificaAutonomiaParaViagem(Veiculo v, Ponto origem, Ponto destino) {
         double d = origem.distanceTo(destino);
-        if(v.getConsumoPorKm()*d <v.getAutonomia()) return true;
+        if (v.getConsumoPorKm() * d < v.getAutonomia()) return true;
 
         return false;
     }
 
+    public Veiculo alugaCarroBarato(Ponto destino, String combustivel, int idCliente) {
+        User u = ((Cliente) this.users.get(idCliente));
+        List<Veiculo> listVeiculos = getListTodosVeiculos();
+        List<Veiculo> disponiveis = getListTodosVeiculosDisponiveis(listVeiculos, ((Cliente) u).getPosicao(), destino);
+        return (Veiculo) disponiveis.stream().min(Comparator.comparing(v -> v.getPrecoPorKm())).get();
+    }
+
 }
-
-

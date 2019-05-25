@@ -114,7 +114,7 @@ public class Pedido implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Pedido)) return false;
+        if ( !(o instanceof Pedido)) return false;
         Pedido pedido = (Pedido) o;
         return getIdPedido() == pedido.getIdPedido() &&
                 getIdCliente() == pedido.getIdCliente() &&

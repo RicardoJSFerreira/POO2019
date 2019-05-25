@@ -1,6 +1,8 @@
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,35 +17,58 @@ import java.util.Objects;
 public abstract class User implements Serializable { // Perguntar se deve ser abstract ou nao  -> Se for abstract tenho de definir metodos nas subclasses penso eu, tenho d eir ver
     
     //variáveis de instância
-    private  int idUser;
+    private  int nif;
     private String email;
     private String nome;
     private String password;
     private String morada;
     private LocalDate dataNascimento;
+    private List<Integer> classificacao;
 
     /**
     * Construtor por omissão de User.
     */
     public User() {
-        this.idUser = -1;
+        this.nif = -1;
         this.email = "";
         this.nome = "";
         this.password = "";
         this.morada = "";
         this.dataNascimento = LocalDate.now();
+        this.classificacao =  new ArrayList<Integer>();
     }
 
     /**
-    * Construtor parametrizado de User.
+    * Construtor parametrizado de User quando é criado no inicio
     */
     public User(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento) {
-        this.idUser = idUser;
+        this.nif = idUser;
         this.email = email;
         this.nome = nome;
         this.password = password;
         this.morada = morada;
         this.dataNascimento = dataNascimento;
+        List<Integer> cla = new ArrayList<>();
+        this.classificacao = cla;
+    }
+    public User(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento,int classificacao) {
+        this.nif = idUser;
+        this.email = email;
+        this.nome = nome;
+        this.password = password;
+        this.morada = morada;
+        this.dataNascimento = dataNascimento;
+        this.classificacao = addClassificacao(classificacao);
+    }
+
+    public User(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento,ArrayList<Integer> classificacoes) {
+        this.nif = idUser;
+        this.email = email;
+        this.nome = nome;
+        this.password = password;
+        this.morada = morada;
+        this.dataNascimento = dataNascimento;
+        this.classificacao =new ArrayList<Integer>(classificacoes);
     }
 
     /**
@@ -51,20 +76,21 @@ public abstract class User implements Serializable { // Perguntar se deve ser ab
     * Aceita como parâmetro outro User e utiliza os métodos de acesso aos valores das variáveis de instância.
     */
     public User(User umUser){
-        this.idUser = umUser.getUserId();
+        this.nif = umUser.getNif();
         this.email = umUser.getEmail();
         this.nome = umUser.getNome();
         this.password = umUser.getPassword();
         this.morada = umUser.getMorada();
         this.dataNascimento = umUser.getDataNascimento();
+        this.classificacao = umUser.getClassificacao();
     }
 
     /**
     * Devolve o id do User em idUser.
     * @return id do User.
     */
-    public int getUserId() {
-        return idUser;
+    public int getNif() {
+        return nif;
     }
 
     /**
@@ -72,7 +98,7 @@ public abstract class User implements Serializable { // Perguntar se deve ser ab
     * @param idUser Novo id do User.
     */
     public void setUserId(int idUser) {
-        this.idUser = idUser;
+        this.nif = idUser;
     }
 
     /**
@@ -155,6 +181,22 @@ public abstract class User implements Serializable { // Perguntar se deve ser ab
         this.dataNascimento = dataNascimento;
     }
 
+    public List<Integer> getClassificacao() {
+        List<Integer> res = new ArrayList<>();
+        for(Integer s : this.classificacao) {
+            res.add(s);
+        }
+        return res;
+    }
+
+
+    public void setClassificacao(List<Integer> res) {
+        this.classificacao = new ArrayList<Integer>();
+        for(Integer s : res) {
+            this.classificacao.add(s);
+        }
+    }
+
     /**
     * Implementação do método de igualdade entre dois User.
     * Redifinição do método equals de Object.
@@ -166,7 +208,7 @@ public abstract class User implements Serializable { // Perguntar se deve ser ab
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return idUser == user.idUser &&
+        return nif == user.nif &&
                 Objects.equals(getEmail(), user.getEmail()) &&
                 Objects.equals(getNome(), user.getNome()) &&
                 Objects.equals(getPassword(), user.getPassword()) &&
@@ -180,7 +222,7 @@ public abstract class User implements Serializable { // Perguntar se deve ser ab
     */
     public String toString() {
         return "User{" +
-                "idUser=" + idUser +
+                "idUser=" + nif +
                 ", email='" + email + '\'' +
                 ", nome='" + nome + '\'' +
                 ", password='" + password + '\'' +
@@ -194,4 +236,24 @@ public abstract class User implements Serializable { // Perguntar se deve ser ab
     */
     public abstract User clone();
 
-}
+    public List<Integer> addClassificacao(int novaClassificacao){
+        int soma = 0;
+        List<Integer> l = new ArrayList<>();
+        for(Integer i : this.classificacao) {
+            l.add(i);
+            soma++;
+        }
+        l.add(novaClassificacao);
+
+        soma  = soma/l.size();
+        l.set(0,soma);
+        return l;
+    }
+
+    public void adicionaClassificacao(int novaClassificacao){
+        this.classificacao = addClassificacao(novaClassificacao);
+    }
+
+    }
+
+

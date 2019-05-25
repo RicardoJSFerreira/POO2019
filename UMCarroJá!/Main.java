@@ -163,7 +163,7 @@ public class Main{
         System.out.println("Indique a matricula");
         String matricula = sc.next();
         System.out.println("Indique a velocidade media(double)");
-        double velocidade = sc.nextDouble();
+        int velocidade = sc.nextInt();
         System.out.println("Indique o preço por km(double)");
         double precoPorKm = sc.nextDouble();
         System.out.println("Indique a Consumo por km (double)");
@@ -181,8 +181,8 @@ public class Main{
         System.out.println("Indique a marca");
         String marca = sc.next();
 
-        Veiculo v = new Carro(matricula,velocidade,precoPorKm,consumoPorKm,autonomiaMax,autonomia,x,y,tipoCombustivel,marca);
-        ucj.adicionaCarro(v,id);
+        Veiculo v = new Carro(matricula,id,velocidade,precoPorKm,consumoPorKm,autonomiaMax,autonomia,x,y,tipoCombustivel,marca);
+        ucj.addCarro(id,v);
     }
     public static void imprimeVeiculo(Veiculo v){
 
@@ -674,6 +674,9 @@ public class Main{
 
 
 
+    /**
+
+
 
         public static void carregaDados (UMCarroJa ucj){
             // Este carregaDados nao vai poder ser assim pois nao vou poder criar desta maneira os objetos
@@ -735,6 +738,7 @@ public class Main{
             if(ucj.pedidoExiste(h3) == false)ucj.addViagem(h3);
         }
 
+     */
     public static UMCarroJa carregaEstado(String save){
         try{
             return UMCarroJa.loadEstado(save);
@@ -761,13 +765,10 @@ public class Main{
         }
     }
     ////////////////////////////////// Main
-        public static void main(String[] args) {
+        public static void main(String[] args) throws IOException {
             Scanner sc = new Scanner(System.in);
-            UMCarroJa l =  new UMCarroJa();
-            carregaDados(l);
-            grava(l);
             UMCarroJa ucj = new UMCarroJa();
-            ucj = carregaEstado("BaseDeDados");
+            ucj = UMCarroJa.importaCSV("logsPOO_carregamentoInicial.bak");
 
 
             System.out.println(ucj);

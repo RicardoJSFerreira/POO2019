@@ -20,19 +20,28 @@ public class Carro extends Veiculo implements Serializable {
     /**
     * Construtor parametrizado de Carro.
     */
-    public Carro(String matricula, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
+    public Carro(String matricula,int nifProp, boolean disponivel, int velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
                  double newPosY,String tipoCombustivel, String marca) {
-        super(matricula, disponivel, velocidadeMed, precoPorKm, consumoPorKm, classificacao, autonomiaMax, autonomia, newPosX, newPosY);
+        super(matricula, nifProp,disponivel, velocidadeMed, precoPorKm, consumoPorKm, classificacao, autonomiaMax, autonomia, newPosX, newPosY);
         this.tipoCombustivel = tipoCombustivel;
         this.marca = marca;
     }
-    public Carro(String matricula, double velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia, double newPosX,
+    public Carro(String matricula,int nifProp, int velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia, double newPosX,
                  double newPosY,String tipoCombustivel, String marca) {
-        super(matricula, false, velocidadeMed, precoPorKm, consumoPorKm,0, autonomiaMax, autonomia, newPosX, newPosY);
+        super(matricula,nifProp, false, velocidadeMed, precoPorKm, consumoPorKm,0, autonomiaMax, autonomia, newPosX, newPosY);
         this.tipoCombustivel = tipoCombustivel;
         this.marca = marca;
     }
-
+    public Carro(String matricula,int nifProp, int velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia,Ponto posicao,String tipoCombustivel, String marca) {
+        super(matricula, nifProp,false, velocidadeMed, precoPorKm, consumoPorKm, classificacao, autonomiaMax, autonomia,posicao);
+        this.tipoCombustivel = tipoCombustivel;
+        this.marca = marca;
+    }
+    public Carro(String matricula,int nifProp, int velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia,Ponto posicao,String tipoCombustivel, String marca) {
+        super(matricula, nifProp,false, velocidadeMed, precoPorKm, consumoPorKm,-1, autonomiaMax, autonomia,posicao);
+        this.tipoCombustivel = tipoCombustivel;
+        this.marca = marca;
+    }
     /**
     * Construtor de cópia de Carro.
     * Aceita como parâmetro outro Carro e utiliza os métodos de acesso aos valores das variáveis de instância.

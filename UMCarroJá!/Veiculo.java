@@ -10,8 +10,9 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
     
     //variáveis de instância
     private String matricula;
+    private int nifProprietario;
     private boolean disponivel;
-    private double velocidadeMed;
+    private int velocidadeMed;
     private double precoPorKm;
     private double consumoPorKm;
     private int classificacao;
@@ -25,8 +26,9 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
     */
     public Veiculo(){
         this.matricula= "";
+        this.nifProprietario = -1;
         this.disponivel = false;
-        this.velocidadeMed = 0.0;
+        this.velocidadeMed = 0;
         this.precoPorKm = 0.0;
         this.consumoPorKm = 0.0;
         this.classificacao = 0;
@@ -37,9 +39,10 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
     /**
     * Construtor parametrizado de Veiculo.
     */
-    public Veiculo (String matricula, boolean disponivel, double velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
+    public Veiculo (String matricula, int nifProp, boolean disponivel, int velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
                     double newPosY){
         this.matricula = matricula;
+        this.nifProprietario = nifProp;
         this.disponivel = disponivel;
         this.velocidadeMed = velocidadeMed;
         this.precoPorKm = precoPorKm;
@@ -49,13 +52,26 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
         this.autonomia = autonomia;
         this.posicao = new Ponto<Double>(newPosX, newPosY);
     }
-    
+
+    public Veiculo (String matricula, int nifProp, boolean disponivel, int velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia,Ponto posicao){
+        this.matricula = matricula;
+        this.nifProprietario = nifProp;
+        this.disponivel = disponivel;
+        this.velocidadeMed = velocidadeMed;
+        this.precoPorKm = precoPorKm;
+        this.consumoPorKm = consumoPorKm;
+        this.classificacao = classificacao;
+        this.autonomiaMax = autonomiaMax;
+        this.autonomia = autonomia;
+        this.posicao = posicao;
+    }
     /**
     * Construtor de cópia de Veiculo.
     * Aceita como parâmetro outro Veiculo e utiliza os métodos de acesso aos valores das variáveis de instância.
     */
     public Veiculo (Veiculo umVeiculo){
         this.matricula = umVeiculo.getMatricula();
+        this.nifProprietario = umVeiculo.getNifProprietario();
         this.disponivel = umVeiculo.getDisponivel();
         this.velocidadeMed = umVeiculo.getVelocidadeMed();
         this.precoPorKm = umVeiculo.getPrecoPorKm();
@@ -83,6 +99,14 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
         this.matricula = matricula;
     }
 
+    public int getNifProprietario() {
+        return nifProprietario;
+    }
+
+    public void setNifProprietario(int nifProprietario) {
+        this.nifProprietario = nifProprietario;
+    }
+
     /**
     * Devolve a disponibilidade Veiculo em disponivel.
     * @return disponibilidade do Veiculo.
@@ -103,7 +127,7 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
     * Devolve a velocidade média do Veiculo em velocidadeMed.
     * @return velocidade média do Veiculo.
     */
-    public double getVelocidadeMed(){
+    public int getVelocidadeMed(){
         return this.velocidadeMed;
     }
     
@@ -111,7 +135,7 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
     * Atualiza a velocidade média do Veiculo em velocidadeMed.
     * @param velocidadeMed Nova velocidade média do Veiculo.
     */
-    public void setVelocidadeMed(double velocidadeMed){
+    public void setVelocidadeMed(int velocidadeMed){
         this.velocidadeMed = velocidadeMed;
     }
     
@@ -211,28 +235,26 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
         this.posicao = posicao;
     }
 
-    /**
-    * Implementação do método de igualdade entre dois Veiculo.
-    * Redifinição do método equals de Object.
-    * @param o O Veiculo que é comparado com o recetor.
-    * @return Booleano true ou false.
-    */
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Veiculo)) return false;
         Veiculo veiculo = (Veiculo) o;
-        return getDisponivel() == veiculo.getDisponivel() &&
+        return getNifProprietario() == veiculo.getNifProprietario() &&
+                getDisponivel() == veiculo.getDisponivel() &&
                 Double.compare(veiculo.getVelocidadeMed(), getVelocidadeMed()) == 0 &&
                 Double.compare(veiculo.getPrecoPorKm(), getPrecoPorKm()) == 0 &&
                 Double.compare(veiculo.getConsumoPorKm(), getConsumoPorKm()) == 0 &&
                 getClassificacao() == veiculo.getClassificacao() &&
                 getAutonomiaMax() == veiculo.getAutonomiaMax() &&
                 getAutonomia() == veiculo.getAutonomia() &&
-                Objects.equals(getMatricula(), veiculo.getMatricula()) &&
-                Objects.equals(getPosicao(), veiculo.getPosicao());
+                getMatricula().equals(veiculo.getMatricula()) &&
+                getPosicao().equals(veiculo.getPosicao());
     }
+
+
+
+
 
     @Override
     public int hashCode() {
@@ -245,7 +267,9 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
     */
     @Override
     public String toString() {
-        return "Veiculo{" + matricula +
+        return "Veiculo{" +
+                "matricula='" + matricula + '\'' +
+                ", nifProprietario=" + nifProprietario +
                 ", disponivel=" + disponivel +
                 ", velocidadeMed=" + velocidadeMed +
                 ", precoPorKm=" + precoPorKm +
