@@ -307,10 +307,7 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         int idPedido;
         int idProp;
 
-        System.out.println(prefere);
-
         if(prefere.equals("MaisBarato")) {
-            System.out.println("entrei");
                 Veiculo vMaisBarato = alugaCarroBarato(posicaoDestino, tipoCombustivel);
                 matricula = vMaisBarato.getMatricula();
                 User c = getUser(nifCliente);
@@ -346,8 +343,8 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         else return false;
     }
 
-    public boolean userExiste(User value) {
-        if (this.users.containsValue(value)) return true;
+    public boolean userExiste(int id) {
+        if (this.users.containsKey(id)) return true;
         else return false;
     }
 

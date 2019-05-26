@@ -39,33 +39,35 @@ public class Main{
                     case 1:
 
                         List<Pedido> list = this.estado.getListPedidosToProprietario(id);
-                        this.imprimeListPedidos(list);
-                        System.out.println(list);
-                        System.out.println("Indique o numero do pedido a Aceitar ou cancelar");
-                        int ped = sc.nextInt();
-                        System.out.println("Pretende aceitar ou cancelar");
-                        System.out.println("(0) Aceitar");
-                        System.out.println("(1) Recusar");
-                        int i = sc.nextInt();
-                        if (i == 0) {
-                            Pedido p = list.get(ped);
-                            this.estado.aceitarPedido(p);
-                            System.out.println("Pedido aceite com sucesso.");
-                            this.progProprietario(id);
+                        try {
+                            this.imprimeListPedidos(list);
+                            System.out.println(list);
+                            System.out.println("Indique o numero do pedido a Aceitar ou cancelar");
+                            int ped = sc.nextInt();
+                            System.out.println("Pretende aceitar ou cancelar");
+                            System.out.println("(0) Aceitar");
+                            System.out.println("(1) Recusar");
+                            int i = sc.nextInt();
+                            if (i == 0) {
+                                Pedido p = list.get(ped);
+                                this.estado.aceitarPedido(p);
+                                System.out.println("Pedido aceite com sucesso.");
+                                this.progProprietario(id);
+                            }
+                            if (i == 1) {
+                                Pedido p = list.get(ped);
+                                this.estado.recusaPedido(p);
+                                System.out.println("Pedido recusado com sucesso.");
+                                this.progProprietario(id);
+                            } else {
+                                System.out.println("Opção não encontrada");
+                            }
+                            sair = 0;
+                            break;
+                            // Historico h = new Historico(pedido,e o resto dos argumentos que fazem do peiddo um historico);
+                            // ucj.aceitarPedido(h);
                         }
-                        if (i == 1) {
-                            Pedido p = list.get(ped);
-                            this.estado.recusaPedido(p);
-                            System.out.println("Pedido recusado com sucesso.");
-                            this.progProprietario(id);
-                        } else {
-                            System.out.println("Opção não encontrada");
-                        }
-                        sair=0;
-                        break;
-                        // Historico h = new Historico(pedido,e o resto dos argumentos que fazem do peiddo um historico);
-                        // ucj.aceitarPedido(h);
-
+                        catch (PedidoNaoExisteException e ){System.out.println(e.getMessage());}
                     case 2: this.menuVeiculosProprietario(id);
                         this.progProprietario(id);
                         sair=0;
@@ -213,19 +215,22 @@ public class Main{
 
     }
 
-        public  List<Veiculo> imprimeListVeiculos(int id){
+        public  void imprimeListVeiculos(int id){
+            try {
+                User p = this.estado.getUser(id);
+                List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
+                int i = 0;
+                for (Veiculo v : veiculos) {
+                    System.out.println("(" + i + ") " + v.getMatricula() + " -> Disponibilidade: " + v.getDisponivel() + " Autonomia: " + v.getAutonomia() + " Autonomia Maxima: " + v.getAutonomiaMax() + " Preço por Km: " + v.getPrecoPorKm() + " tem classificação:" + v.getMediaClassificacao());
+                    i++;
+                }
+                throw new VeiculoNaoExisteException("Nao é possivel adquirir lista de veiculos");
 
-            User p = this.estado.getUser(id);
-            List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
-            int i=0;
-            for (Veiculo v: veiculos) {
-            System.out.println("("+i+") "+v.getMatricula() + " -> Disponibilidade: " + v.getDisponivel() + " Autonomia: " + v.getAutonomia() +" Autonomia Maxima: " + v.getAutonomiaMax() + " Preço por Km: " + v.getPrecoPorKm() + " tem classificação:" + v.getMediaClassificacao());
-            i++;
-        }
-            return veiculos;
+            }catch (VeiculoNaoExisteException e){System.out.println(e.getMessage());}
     }
 
         public  void imprimeListHistoricos( int id, List<Historico> list){
+            try{
 
             User user = this.estado.getUser(id);
             int i=0;
@@ -239,6 +244,7 @@ public class Main{
                     i++;
 
             }
+                throw new HistoricoNaoExisteException("Lista de historicos indeterminada");
         }
         else{
             for(Historico h: list){
@@ -249,7 +255,9 @@ public class Main{
                         + h.getMatricula() + " Valor Pago:" + h.getValorPago()+" euros");
                 i++;
             }
-        }
+                throw new HistoricoNaoExisteException("Lista de historicos indeterminada");
+        }}
+            catch (HistoricoNaoExisteException e){System.out.println(e.getMessage());}
     }
     public  void imprimeListPedidos( List<Pedido> list) throws PedidoNaoExisteException{
         try{
@@ -257,11 +265,13 @@ public class Main{
         for(Pedido p: list){
             User c = this.estado.getUser(p.getIdCliente());
             System.out.println("(" + i +") " +"Cliente: " + c.getNome() +
-                    " Veiculo: "
+                    ",Veiculo: "
                     + p.getMatricula() +
                     "Destino: " +p.getDestino());
             i++;
         }
+                throw new PedidoNaoExisteException("Lista de historicos indeterminada");
+
         }catch (PedidoNaoExisteException e){System.out.println(" Pedido nao existe");}
     }
 
@@ -294,7 +304,10 @@ public class Main{
 
             System.out.println("As Seguintes viagens foram aceites e ainda nao foram avaliadas:");
             List<Historico> historicosNaoClassificados = this.estado.verificaHistoricoNaoClassificado(id);
-            imprimeListHistoricos(id,historicosNaoClassificados);
+            try {
+                imprimeListHistoricos(id, historicosNaoClassificados);
+                throw new HistoricoNaoExisteException("Lista de historicos indeterminada");
+            }catch (HistoricoNaoExisteException e){System.out.println(e.getMessage());}
             this.grava();
             System.out.println("Alterações efetuadas com sucesso");
             System.out.println("Opçoes:");
@@ -314,6 +327,7 @@ public class Main{
 
                     case 1:
                         this.menuClienteSolicitaViagem(id);
+                        this.progCliente(id);
                         sair=0;
                         break;
 
@@ -325,22 +339,41 @@ public class Main{
                         date = sc.nextLine();
                         LocalDate end = LocalDate.parse(date);
                         List<Historico> list = this.estado.getListHistorico(id, begin, end);
-                        this.imprimeListHistoricos(id,list);
+                        try {
+                            this.imprimeListHistoricos(id,list);
+                            throw new HistoricoNaoExisteException("");
+                        }catch (HistoricoNaoExisteException e){System.out.println(e.getMessage());}
+                        this.progCliente(id);
                         sair=0;
                         break;
 
                     case 3:
-
+                        imprimeListHistoricos(id,this.estado.verificaHistoricoNaoClassificado(id));
+                        System.out.println("Indique o historico que pretende classificar ");
+                        int historico =sc.nextInt();
+                        System.out.println("Indique a sua classificacao do veiculo de 0->100 ");
+                        int classVeic = sc.nextInt();
+                        Historico h = this.estado.verificaHistoricoNaoClassificado(id).get(historico);
+                        this.estado.addClassificacaoVeiculo(h.getIdProprietario(),h.getMatricula(),classVeic);
+                        System.out.println("Indique a sua classificacao do Proprietario de 0->100 ");
+                        int classProp = sc.nextInt();
+                        User u = this.estado.getUser(h.getIdProprietario());
+                        this.estado.addClassificacaoUser(u.getNif(),classProp);
+                        this.grava();
+                        System.out.println("Classificacoes adicionadas com sucesso ");
+                        this.progCliente(id);
                         sair=0;
                         break;
-                    default: System.out.println("Ação não conhecida");
-                    break;
+
 
                     case 4:
                         this.grava();
                         System.out.println("Estado guardado com sucesso");
+                        this.progCliente(id);
+                        sair=0;
                         break;
-
+                    default: System.out.println("Ação não conhecida");
+                        break;
                 }
 
 
@@ -402,6 +435,7 @@ public class Main{
                     break;
             }
         } while(sair == 1);
+        this.loginMenu();
     }
 
     public void alugCarroMaisProx( Ponto destino, int idCliente,String comb){
@@ -425,6 +459,7 @@ public class Main{
                         Pedido p = new Pedido(idPedido,idCliente,idProp,matricula,vMaisProx.getPosicao(),destino,dist);
                         this.estado.addViagem(p);
                         System.out.println("Pedido enviado");
+                        sair=0;
                     case 1: this.progCliente(idCliente);
                         sair = 0; break;
 
@@ -453,6 +488,7 @@ public class Main{
                     Pedido p = new Pedido(idPedido,idCliente,idProp,matricula, vMaisBarato.getPosicao(),destino,dist);
                     this.estado.addViagem(p);
                     System.out.println("Pedido enviado");
+                    sair=0;
                 case 1: this.progCliente(idCliente);
                     sair = 0; break;
 
@@ -487,6 +523,7 @@ public class Main{
                     Pedido ped = new Pedido(idPedido,idCliente,idProp,matricula, vBaratoDist.getPosicao(),destino,dist);
                     this.estado.addViagem(ped);
                     System.out.println("Pedido enviado");
+                    sair=0;
                 case 1: this.progCliente(idCliente);
                     sair = 0; break;
 
@@ -526,6 +563,7 @@ public class Main{
                     Pedido p = new Pedido(idPedido,idCliente,idProp,matricula, vParaAlugar.getPosicao(),destino,dist);
                     this.estado.addViagem(p);
                     System.out.println("Pedido enviado");
+                    sair=0;
                 case 1:this.progCliente(idCliente);
                     sair = 0; break;
 
@@ -570,6 +608,7 @@ public class Main{
                     Pedido p = new Pedido(idPedido,idCliente,idProp,matricula, vParaAlugar.getPosicao(),destino,dist);
                     this.estado.addViagem(p);
                     System.out.println("Pedido enviado");
+                    sair=0;
                 case 1: this.progCliente(idCliente);
                     sair = 0; break;
 
@@ -594,14 +633,22 @@ public class Main{
 
                 else{
                     System.out.println("Email ja existente. Tente de novo.");
+
                 }
             }
             try {
+                System.out.print("Nif: ");
+                Integer nif = sc.nextInt();
+                if(this.estado.userExiste(nif)) {
+                    this.registo();
+                    throw new UserJaExisteException("User ja existente");
+
+                }
                 System.out.print("Nome: ");
-                String nome = sc.nextLine();
+                String nome = sc.next();
 
                 System.out.print("Morada: ");
-                String morada = sc.nextLine();
+                String morada = sc.next();
 
                 System.out.print("Password: ");
                 String pass = sc.next();
@@ -614,8 +661,7 @@ public class Main{
                 int resposta = sc.nextInt();
 
                 if (resposta == 1) {
-                    Integer id = this.estado.getTodosUsers().size();
-                    Proprietario p = new Proprietario(id, email, nome, pass, morada, dataNascimento);
+                    Proprietario p = new Proprietario(nif, email, nome, pass, morada, dataNascimento);
                     this.estado.addUser(p);
                     System.out.println("Utilizador criado com sucesso");
                     // Criar exceção para o caso de nao gravar novo user
@@ -629,8 +675,7 @@ public class Main{
                     System.out.println("Indique a sua posição Y");
                     Double y = sc.nextDouble();
 
-                    Integer id = this.estado.getTodosUsers().size();
-                    Cliente c = new Cliente(id, email, nome, pass, morada, dataNascimento, x, y);
+                    Cliente c = new Cliente(nif, email, nome, pass, morada, dataNascimento, x, y);
                     this.estado.addUser(c);
                     System.out.println("Utilizador criado com sucesso");
                 }
