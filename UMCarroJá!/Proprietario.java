@@ -105,12 +105,13 @@ public class Proprietario extends User implements Serializable {
     }
     public Veiculo getVeiculo(String matricula) {
         for (Veiculo v : veiculos) {
-            if (v.getMatricula().equals(matricula)) return v.clone();
+            if (v.getMatricula().equals(matricula)) return v;
         }
         return null;
     }
     public void classificaVeiculo (String matricula,int classificacao){
-        int soma = 0;
+        Veiculo v = getVeiculo(matricula);
+        v.adicionaClassificacao(classificacao);
 
     }
 }

@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,7 +16,7 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
     private int velocidadeMed;
     private double precoPorKm;
     private double consumoPorKm;
-    private int classificacao;
+    private List<Integer> classificacao;
     private int autonomiaMax;
     private int autonomia;
     private Ponto posicao;
@@ -31,7 +32,7 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
         this.velocidadeMed = 0;
         this.precoPorKm = 0.0;
         this.consumoPorKm = 0.0;
-        this.classificacao = 0;
+        this.classificacao =  new ArrayList<Integer>();
         this.autonomia = 0;
         this.posicao = new Ponto(0,0);
     }
@@ -39,7 +40,7 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
     /**
     * Construtor parametrizado de Veiculo.
     */
-    public Veiculo (String matricula, int nifProp, boolean disponivel, int velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
+    public Veiculo (String matricula, int nifProp, boolean disponivel, int velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia, double newPosX,
                     double newPosY){
         this.matricula = matricula;
         this.nifProprietario = nifProp;
@@ -47,20 +48,34 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
         this.velocidadeMed = velocidadeMed;
         this.precoPorKm = precoPorKm;
         this.consumoPorKm = consumoPorKm;
-        this.classificacao = classificacao;
+        List<Integer> cla = new ArrayList<>();
+        this.classificacao = cla;
         this.autonomiaMax = autonomiaMax;
         this.autonomia = autonomia;
         this.posicao = new Ponto<Double>(newPosX, newPosY);
     }
-
-    public Veiculo (String matricula, int nifProp, boolean disponivel, int velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia,Ponto posicao){
+    public Veiculo (String matricula, int nifProp, boolean disponivel, int velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia, Ponto p){
         this.matricula = matricula;
         this.nifProprietario = nifProp;
         this.disponivel = disponivel;
         this.velocidadeMed = velocidadeMed;
         this.precoPorKm = precoPorKm;
         this.consumoPorKm = consumoPorKm;
-        this.classificacao = classificacao;
+        List<Integer> cla = new ArrayList<>();
+        this.classificacao = cla;
+        this.autonomiaMax = autonomiaMax;
+        this.autonomia = autonomia;
+        this.posicao = p;
+    }
+
+    public Veiculo (String matricula, int nifProp, boolean disponivel, int velocidadeMed, double precoPorKm, double consumoPorKm, ArrayList<Integer> classificacoes, int autonomiaMax, int autonomia,Ponto posicao){
+        this.matricula = matricula;
+        this.nifProprietario = nifProp;
+        this.disponivel = disponivel;
+        this.velocidadeMed = velocidadeMed;
+        this.precoPorKm = precoPorKm;
+        this.consumoPorKm = consumoPorKm;
+        this.classificacao =new ArrayList<Integer>(classificacoes);
         this.autonomiaMax = autonomiaMax;
         this.autonomia = autonomia;
         this.posicao = posicao;
@@ -170,21 +185,22 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
     public void setConsumoPorKm(double consumoPorKm){
         this.consumoPorKm = consumoPorKm;
     }
-    
-    /**
-    * Devolve a classificação do Veiculo em classificacao.
-    * @return classificação do Veiculo.
-    */
-    public int getClassificacao() {
-        return classificacao;
+
+
+    public List<Integer> getClassificacao() {
+        List<Integer> res = new ArrayList<>();
+        for(Integer s : this.classificacao) {
+            res.add(s);
+        }
+        return res;
     }
 
-    /**
-    * Atualiza a classificação do Veiculo em classificacao.
-    * @param classificacao Nova classificação do Veiculo.
-    */
-    public void setClassificacao(int classificacao) {
-        this.classificacao = classificacao;
+
+    public void setClassificacao(List<Integer> res) {
+        this.classificacao = new ArrayList<Integer>();
+        for(Integer s : res) {
+            this.classificacao.add(s);
+        }
     }
 
     /**
@@ -275,6 +291,7 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
                 ", precoPorKm=" + precoPorKm +
                 ", consumoPorKm=" + consumoPorKm +
                 ", classificacao=" + classificacao +
+                "Media de classificacao: " + getMediaClassificacao() +
                 ", autonomiaMax=" + autonomiaMax +
                 ", autonomia=" + autonomia +
                 ", posicao=" + posicao +
@@ -285,4 +302,23 @@ public abstract class Veiculo implements Serializable { // vou ter de criar uma 
     * Implementação do método de clonagem de um Veiculo.
     */
     public abstract Veiculo clone();
+
+    public List<Integer> addClassificacao(int novaClassificacao) {
+        List<Integer> l = new ArrayList<>();
+        for(Integer i : this.classificacao) {
+            l.add(i);
+        }
+        l.add(novaClassificacao);
+
+        return l;
+
+    }
+
+    public void adicionaClassificacao(int novaClassificacao) {
+        this.classificacao = addClassificacao(novaClassificacao);
+    }
+
+    public double getMediaClassificacao() {
+        return this.getClassificacao().stream().mapToDouble(Integer::doubleValue).average().orElse(0.0);
+    }
 }

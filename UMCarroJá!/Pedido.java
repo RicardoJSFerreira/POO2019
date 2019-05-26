@@ -11,7 +11,7 @@ public class Pedido implements Serializable {
     private String matricula;
     private Ponto origem;
     private Ponto destino;
-    private Time tempoQueDemora;
+    private double tempoQueDemoraemHoras;
 
     public Pedido(){
         this.idPedido = -1;
@@ -20,27 +20,27 @@ public class Pedido implements Serializable {
         this.matricula = "";
         this.origem = new Ponto();
         this.destino = new Ponto();
-        this.tempoQueDemora = new Time(0,0,0);
+        this.tempoQueDemoraemHoras = -1.0;
 
     }
 
-    public Pedido(int idPedido, int idCliente, int idProprietario, String matricula,double oldx, double oldy ,double newPosX, double newPosY, Time tempoQueDemora){
+    public Pedido(int idPedido, int idCliente, int idProprietario, String matricula,double oldx, double oldy ,double newPosX, double newPosY, double tempoQueDemora){
         this.idPedido = idPedido;
         this.idCliente = idCliente;
         this.idProprietario = idProprietario;
         this.matricula = matricula;
         this.origem = new Ponto(oldx,oldy);
         this.destino = new Ponto(newPosX,newPosY);
-        this.tempoQueDemora = tempoQueDemora;
+        this.tempoQueDemoraemHoras = tempoQueDemora;
     }
-    public Pedido(int idPedido, int idCliente, int idProprietario, String matricula,Ponto oldPos,Ponto newPos, Time tempoQueDemora){
+    public Pedido(int idPedido, int idCliente, int idProprietario, String matricula,Ponto oldPos,Ponto newPos, double tempoQueDemora){
         this.idPedido = idPedido;
         this.idCliente = idCliente;
         this.idProprietario = idProprietario;
         this.matricula = matricula;
         this.origem = oldPos;
         this.destino = newPos;
-        this.tempoQueDemora = tempoQueDemora;
+        this.tempoQueDemoraemHoras = tempoQueDemora;
     }
 
     public Pedido(Pedido umPedido){
@@ -50,7 +50,7 @@ public class Pedido implements Serializable {
         this.matricula = umPedido.getMatricula();
         this.origem = umPedido.getOrigem();
         this.destino = umPedido.getDestino();
-        this.tempoQueDemora = umPedido.getTempoQueDemora();
+        this.tempoQueDemoraemHoras = umPedido.getTempoQueDemoraemHoras();
 
     }
 
@@ -102,28 +102,28 @@ public class Pedido implements Serializable {
         this.destino = destino;
     }
 
-    public Time getTempoQueDemora() {
-        return tempoQueDemora;
+    public double getTempoQueDemoraemHoras() {
+        return tempoQueDemoraemHoras;
     }
 
-    public void setTempoQueDemora(Time tempoQueDemora) {
-        this.tempoQueDemora = tempoQueDemora;
+    public void setTempoQueDemoraemHoras(double tempoQueDemoraemHoras) {
+        this.tempoQueDemoraemHoras = tempoQueDemoraemHoras;
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if ( !(o instanceof Pedido)) return false;
+        if (!(o instanceof Pedido)) return false;
         Pedido pedido = (Pedido) o;
         return getIdPedido() == pedido.getIdPedido() &&
                 getIdCliente() == pedido.getIdCliente() &&
                 getIdProprietario() == pedido.getIdProprietario() &&
+                Double.compare(pedido.getTempoQueDemoraemHoras(), getTempoQueDemoraemHoras()) == 0 &&
                 Objects.equals(getMatricula(), pedido.getMatricula()) &&
                 Objects.equals(getOrigem(), pedido.getOrigem()) &&
-                Objects.equals(getDestino(), pedido.getDestino()) &&
-                Objects.equals(getTempoQueDemora(), pedido.getTempoQueDemora());
+                Objects.equals(getDestino(), pedido.getDestino());
     }
+
 
 
     public String toString() {

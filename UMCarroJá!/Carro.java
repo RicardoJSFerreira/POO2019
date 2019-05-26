@@ -1,4 +1,6 @@
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Carro extends Veiculo implements Serializable {
@@ -20,25 +22,26 @@ public class Carro extends Veiculo implements Serializable {
     /**
     * Construtor parametrizado de Carro.
     */
-    public Carro(String matricula,int nifProp, boolean disponivel, int velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia, double newPosX,
-                 double newPosY,String tipoCombustivel, String marca) {
-        super(matricula, nifProp,disponivel, velocidadeMed, precoPorKm, consumoPorKm, classificacao, autonomiaMax, autonomia, newPosX, newPosY);
-        this.tipoCombustivel = tipoCombustivel;
-        this.marca = marca;
-    }
+
     public Carro(String matricula,int nifProp, int velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia, double newPosX,
                  double newPosY,String tipoCombustivel, String marca) {
-        super(matricula,nifProp, false, velocidadeMed, precoPorKm, consumoPorKm,0, autonomiaMax, autonomia, newPosX, newPosY);
+        super(matricula,nifProp, false, velocidadeMed, precoPorKm, consumoPorKm, autonomiaMax, autonomia, newPosX, newPosY);
         this.tipoCombustivel = tipoCombustivel;
         this.marca = marca;
     }
-    public Carro(String matricula,int nifProp, int velocidadeMed, double precoPorKm, double consumoPorKm, int classificacao, int autonomiaMax, int autonomia,Ponto posicao,String tipoCombustivel, String marca) {
-        super(matricula, nifProp,false, velocidadeMed, precoPorKm, consumoPorKm, classificacao, autonomiaMax, autonomia,posicao);
+    public Carro(String matricula, int nifProp, int velocidadeMed, double precoPorKm, double consumoPorKm, ArrayList<Integer> classificacoes, int autonomiaMax, int autonomia, Ponto posicao, String tipoCombustivel, String marca) {
+        super(matricula, nifProp,false, velocidadeMed, precoPorKm, consumoPorKm, classificacoes, autonomiaMax, autonomia,posicao);
         this.tipoCombustivel = tipoCombustivel;
         this.marca = marca;
     }
     public Carro(String matricula,int nifProp, int velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia,Ponto posicao,String tipoCombustivel, String marca) {
-        super(matricula, nifProp,false, velocidadeMed, precoPorKm, consumoPorKm,-1, autonomiaMax, autonomia,posicao);
+        super(matricula, nifProp,false, velocidadeMed, precoPorKm, consumoPorKm, autonomiaMax, autonomia,posicao);
+        this.tipoCombustivel = tipoCombustivel;
+        this.marca = marca;
+    }
+
+    public Carro(String matricula,int nifProp, boolean disponivel,int velocidadeMed, double precoPorKm, double consumoPorKm, int autonomiaMax, int autonomia,Ponto posicao,String tipoCombustivel, String marca) {
+        super(matricula, nifProp,disponivel, velocidadeMed, precoPorKm, consumoPorKm, autonomiaMax, autonomia,posicao);
         this.tipoCombustivel = tipoCombustivel;
         this.marca = marca;
     }

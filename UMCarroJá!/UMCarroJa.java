@@ -148,9 +148,10 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
                 double consumoKM = Double.parseDouble(atributos[6]);
                 int autonomia = Integer.parseInt(atributos[7]);
                 Ponto posicaoVeiculo = new Ponto(Double.parseDouble(atributos[8]), Double.parseDouble(atributos[9]));
-                Veiculo car = new Carro(matricula, nifProp, velocidadeMedia, precoKM, consumoKM, autonomia, autonomia, posicaoVeiculo, tipoCombustivel, marca);
+                Veiculo car = new Carro(matricula, nifProp,true, velocidadeMedia, precoKM, consumoKM, autonomia, autonomia, posicaoVeiculo, tipoCombustivel, marca);
                 this.addCarro(nifProp, car);
                 break;
+
             case "Aluguer":
                 atributos = divide[1].split(",");
                 int nifCliente = Integer.parseInt(atributos[0]);
@@ -291,8 +292,52 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         ((Proprietario) this.users.get(prop)).classificaVeiculo(matricula, classificacao);
     }
 
-
+    public int qualificacaoUser(int id){
+        User u = getUser(id);
+        return u.getClassificacao().get(0);
+    }
+    public int qualificacaoVeiculo(String matricula){
+        Veiculo u = getVeiculoFromMatricula(matricula);
+        return u.getClassificacao().get(0);
+    }
     public void geraPedido(int nifCliente, Ponto posicaoDestino, String tipoCombustivel, String prefere) {
+
+        String matricula;
+        double dist;
+        int idPedido;
+        int idProp;
+
+        System.out.println(prefere);
+
+        if(prefere.equals("MaisBarato")) {
+            System.out.println("entrei");
+                Veiculo vMaisBarato = alugaCarroBarato(posicaoDestino, tipoCombustivel);
+                matricula = vMaisBarato.getMatricula();
+                User c = getUser(nifCliente);
+
+                dist = ((Cliente) c).getPosicao().distanceTo(vMaisBarato.getPosicao());
+                idPedido = getTodasViagens().size();
+                idProp = getProprietarioFromMatricula(matricula);
+                Pedido p = new Pedido(idPedido, nifCliente, idProp, matricula, vMaisBarato.getPosicao(), posicaoDestino, dist);
+                addViagem(p);
+
+        }
+            else if(prefere.equals("MaisPerto")){
+            User cli = getUser(nifCliente);
+            Ponto origem = ((Cliente) cli).getPosicao();
+            Veiculo vMaisPerto = alugaCarroMaisProx(origem,posicaoDestino, tipoCombustivel);
+            matricula = vMaisPerto.getMatricula();
+
+            dist = ((Cliente) cli).getPosicao().distanceTo(vMaisPerto.getPosicao());
+            idPedido = getTodasViagens().size();
+            idProp = getProprietarioFromMatricula(matricula);
+            Pedido ped = new Pedido(idPedido, nifCliente, idProp, matricula, vMaisPerto.getPosicao(), posicaoDestino, dist);
+            addViagem(ped);
+        }
+
+
+
+
 
     }
 
@@ -307,7 +352,7 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
     }
 
 
-    public void setNewClientLocation(int id, int x, int y) {
+    public void setNewClientLocation(int id, double x, double y) {
         Ponto p = new Ponto(x, y);
         ((Cliente) this.users.get(id)).setPosicao(p);
     }
@@ -373,7 +418,7 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
 
     public Veiculo getVeiculoByID(int idVeiculo, int idUser) {
         User u = (Proprietario) getUser(idUser);
-        Veiculo v = ((Proprietario) u).getVeiculos().get(idVeiculo);
+        Veiculo v = ((Proprietario) u).getVeiculos().get(idVeiculo).clone();
         return v;
     }
 
@@ -398,11 +443,12 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         return res;
     }
 
-    public List<Veiculo> getListTodosVeiculosDisponiveis(List<Veiculo> l, Ponto origem, Ponto destino) {
+    public List<Veiculo> getListTodosVeiculosDisponiveis(List<Veiculo> l, Ponto destino, String comb) {
         List<Veiculo> res = new ArrayList<Veiculo>();
         for (Veiculo v : l) {
-            if (v.getDisponivel() == true && verificaAutonomiaParaViagem(v, origem, destino)) res.add(v);
+            if (v.getDisponivel() == true && verificaAutonomiaParaViagem(v, v.getPosicao(), destino) && ((Carro) v).getTipoCombustivel().equals(comb) ) res.add(v);
         }
+        ((ArrayList<Veiculo>) res).clone();
         return res;
     }
 
@@ -415,6 +461,15 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         }
         return -1;
     }
+    public Veiculo getVeiculoFromMatricula(String matricula) {
+        List<Veiculo> l = new ArrayList<Veiculo>();
+        for (User u : this.users.values()) {
+            if (u instanceof Proprietario) {
+                if (((Proprietario) u).getVeiculo(matricula) != null) return ((Proprietario) u).getVeiculo(matricula).clone();
+            }
+        }
+        return null;
+    }
 
     public boolean verificaAutonomiaParaViagem(Veiculo v, Ponto origem, Ponto destino) {
         double d = origem.distanceTo(destino);
@@ -422,12 +477,32 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
 
         return false;
     }
-
-    public Veiculo alugaCarroBarato(Ponto destino, String combustivel, int idCliente) {
-        User u = ((Cliente) this.users.get(idCliente));
+    public Veiculo alugaCarroMaisProx(Ponto origem,Ponto destino, String combustivel) {
         List<Veiculo> listVeiculos = getListTodosVeiculos();
-        List<Veiculo> disponiveis = getListTodosVeiculosDisponiveis(listVeiculos, ((Cliente) u).getPosicao(), destino);
-        return (Veiculo) disponiveis.stream().min(Comparator.comparing(v -> v.getPrecoPorKm())).get();
+        List<Veiculo> disponiveis = getListTodosVeiculosDisponiveis(listVeiculos, destino,combustivel);
+        return (Veiculo) disponiveis.stream().min(Comparator.comparing(v -> v.getPosicao().distanceTo(origem))).get().clone();
+    }
+
+
+    public Veiculo alugaCarroBarato(Ponto destino, String combustivel) {
+        List<Veiculo> listVeiculos = getListTodosVeiculos();
+        List<Veiculo> disponiveis = getListTodosVeiculosDisponiveis(listVeiculos, destino,combustivel);
+        return (Veiculo) disponiveis.stream().min(Comparator.comparing(v -> v.getPrecoPorKm())).get().clone();
+    }
+    public Veiculo alugaCarroBaratoDentroDeDistancia(double distancia, Ponto origem,Ponto destino, String combustivel) {
+        List<Veiculo> listVeiculos = getListTodosVeiculos();
+        List<Veiculo> disponiveis = getListTodosVeiculosDisponiveis(listVeiculos, destino,combustivel);
+        return (Veiculo) disponiveis.stream().filter(v->v.getPosicao().distanceTo(origem)<distancia).min(Comparator.comparing(v -> v.getPrecoPorKm())).get().clone();
+    }
+    public List<Veiculo> alugaCarroAutonimia(int autonomia,Ponto destino, String combustivel) {
+        List<Veiculo> listVeiculos = getListTodosVeiculos();
+        List<Veiculo> disponiveis = getListTodosVeiculosDisponiveis(listVeiculos, destino,combustivel);
+        return (ArrayList<Veiculo>) disponiveis.stream().filter(v -> v.getAutonomia()>autonomia ).map(Veiculo::clone)
+                .collect(Collectors.toList());
+    }
+    public List<Historico> verificaHistoricoNaoClassificado(int idCliente){
+        return (List<Historico>) getListHistoricos().stream().filter(v -> v.getIdCliente() == idCliente).map(Historico::clone);
+
     }
 
 }

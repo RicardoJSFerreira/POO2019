@@ -13,6 +13,8 @@ public class Historico extends Pedido implements Serializable {
     //variáveis de instância
     private double valorPago; // vai ter de ser calculado atraves da distancia percorrida e o preço/km
     private LocalDate dataViagem;
+    private int classificado;
+
 
     /**
      * Construtor por omissão de Historico.
@@ -21,22 +23,31 @@ public class Historico extends Pedido implements Serializable {
         super();
         this.valorPago = 0.0;
         this.dataViagem = LocalDate.now();
+        this.classificado = -1;
     }
 
     public Historico(Pedido p, double valorPago, LocalDate dataViagem){
         super(p);
         this.valorPago = valorPago;
         this.dataViagem = dataViagem;
+        this.classificado = -1;
 
     }
 
     /**
      * Construtor parametrizado de Historico.
      */
-    public Historico(int idPedido, int idCliente, int idProprietario,String matricula, double oldPosX, double oldPosY, double newPosX, double newPosY, Time tempoQueDemora, double valorPago, LocalDate dataViagem) {
+    public Historico(int idPedido, int idCliente, int idProprietario,String matricula, double oldPosX, double oldPosY, double newPosX, double newPosY, double tempoQueDemora, double valorPago, LocalDate dataViagem) {
         super(idPedido, idCliente, idProprietario, matricula,oldPosX,oldPosY, newPosX, newPosY, tempoQueDemora);
         this.valorPago = valorPago;
         this.dataViagem = dataViagem;
+        this.classificado = -1;
+    }
+    public Historico(int idPedido, int idCliente, int idProprietario,String matricula, double oldPosX, double oldPosY, double newPosX, double newPosY, double tempoQueDemora, double valorPago, LocalDate dataViagem, int classificado) {
+        super(idPedido, idCliente, idProprietario, matricula,oldPosX,oldPosY, newPosX, newPosY, tempoQueDemora);
+        this.valorPago = valorPago;
+        this.dataViagem = dataViagem;
+        this.classificado = classificado;
     }
 
     /**
@@ -82,6 +93,14 @@ public class Historico extends Pedido implements Serializable {
         this.dataViagem = dataViagem;
     }
 
+    public int getClassificado() {
+        return classificado;
+    }
+
+    public void setClassificado(int classificado) {
+        this.classificado = classificado;
+    }
+
     /**
      * Implementação do método de igualdade entre dois Historico.
      * Redifinição do método equals de Object.
@@ -94,9 +113,11 @@ public class Historico extends Pedido implements Serializable {
         if (!(o instanceof Historico)) return false;
         if (!super.equals(o)) return false;
         Historico historico = (Historico) o;
-        return getValorPago() == historico.getValorPago() &&
+        return Double.compare(historico.getValorPago(), getValorPago()) == 0 &&
+                getClassificado() == historico.getClassificado() &&
                 Objects.equals(getDataViagem(), historico.getDataViagem());
     }
+
 
     /**
      * Método que devolve a representação em String de Historico.
@@ -106,7 +127,8 @@ public class Historico extends Pedido implements Serializable {
     public String toString() {
         return super.toString()+"Historico{" +
                 "valorPago=" + valorPago +
-                ", dataViagem=" + dataViagem +
+                ", dataViagem=" + dataViagem
+                + "classificado com:" + classificado +
                 '}';
     }
 
@@ -117,4 +139,6 @@ public class Historico extends Pedido implements Serializable {
     public Historico clone() {
         return new Historico(this);
     }
+
+
 }

@@ -25,10 +25,6 @@ public class Cliente extends User implements Serializable {
     /**
     * Construtor parametrizado de Cliente.
     */
-    public Cliente(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento, Double newPosX, Double newPosY, int classificacao) {
-        super(idUser,email, nome, password, morada, dataNascimento,classificacao);
-        this.posicao = new Ponto<Double>(newPosX, newPosY);
-    }
 
     public Cliente(int idUser, String email, String nome, String password, String morada, LocalDate dataNascimento, Double newPosX, Double newPosY) {
         super(idUser,email, nome, password, morada, dataNascimento);
