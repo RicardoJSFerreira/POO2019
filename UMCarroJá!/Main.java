@@ -27,6 +27,7 @@ public class Main{
             System.out.println("1 - Pedidos pendentes");
             System.out.println("2 - Meus Veiculos");
             System.out.println("3 - Visualizar Historico de Viagens");
+            System.out.println("4 - Guardar estado");
             System.out.println("Insira a sua opçao: ");
             Scanner sc = new Scanner(System.in);
             int sair = 1;
@@ -36,7 +37,8 @@ public class Main{
                     case 0: sair = 0;
                         break;
                     case 1:
-                        List <Pedido> list= this.estado.getListPedidosToProprietario(id);
+
+                        List<Pedido> list = this.estado.getListPedidosToProprietario(id);
                         this.imprimeListPedidos(list);
                         System.out.println(list);
                         System.out.println("Indique o numero do pedido a Aceitar ou cancelar");
@@ -44,20 +46,21 @@ public class Main{
                         System.out.println("Pretende aceitar ou cancelar");
                         System.out.println("(0) Aceitar");
                         System.out.println("(1) Recusar");
-                        int i =sc.nextInt();
-                        if (i == 0){
+                        int i = sc.nextInt();
+                        if (i == 0) {
                             Pedido p = list.get(ped);
                             this.estado.aceitarPedido(p);
                             System.out.println("Pedido aceite com sucesso.");
                             this.progProprietario(id);
                         }
-                        if (i == 1){
+                        if (i == 1) {
                             Pedido p = list.get(ped);
                             this.estado.recusaPedido(p);
                             System.out.println("Pedido recusado com sucesso.");
                             this.progProprietario(id);
+                        } else {
+                            System.out.println("Opção não encontrada");
                         }
-                        else{System.out.println("Opção não encontrada");}
                         sair=0;
                         break;
                         // Historico h = new Historico(pedido,e o resto dos argumentos que fazem do peiddo um historico);
@@ -79,6 +82,11 @@ public class Main{
                         this.progProprietario(id);
                         sair=0;
                         break;
+                    case 4:
+                        this.grava();
+                        System.out.println("Estado guardado com sucesso");
+                        break;
+
                 }
             }while(sair == 1);
         }
@@ -187,10 +195,9 @@ public class Main{
         this.estado.addCarro(id,v);
     }
     public  void imprimeVeiculo(Veiculo v){
-
-        System.out.println("Matr�cula: " + v.getMatricula() + ", Disponibilidade: " + v.getDisponivel() +  ", Pre�o por Km: " + v.getPrecoPorKm()
-                + ", Consumo por Km" + v.getConsumoPorKm() + ", Classifica��o:" + v.getClassificacao() + "Autonomia: " + v.getAutonomia()
-                + " Autonomia M�xima: " + v.getAutonomiaMax());
+            System.out.println("Matricula: " + v.getMatricula() + ", Disponibilidade: " + v.getDisponivel() + ", Preço por Km: " + v.getPrecoPorKm()
+                    + ", Consumo por Km" + v.getConsumoPorKm() + ", Classificacao: " + +this.estado.qualificacaoVeiculo(v.getMatricula()) + " Autonomia: " + v.getAutonomia()
+                    + " Autonomia Maxima: " + v.getAutonomiaMax());
 
     }
 
@@ -198,15 +205,16 @@ public class Main{
 
         int i = 0;
         for (Veiculo v : l){
-            System.out.println("("+i+")" + "Matr�cula: " + v.getMatricula() + ", Disponibilidade: " + v.getDisponivel() +  ", Pre�o por Km: " + v.getPrecoPorKm()
+            System.out.println("("+i+")" + "Matracula: " + v.getMatricula() + ", Disponibilidade: " + v.getDisponivel() +  ", Preço por Km: " + v.getPrecoPorKm()
                     + ", Consumo por Km" + v.getConsumoPorKm() + ", Classifica��o:" + this.estado.qualificacaoVeiculo(v.getMatricula()) + "Autonomia: " + v.getAutonomia()
-                    + " Autonomia M�xima: " + v.getAutonomiaMax());
+                    + " Autonomia Maxima: " + v.getAutonomiaMax());
             i++;
         }
 
     }
 
         public  List<Veiculo> imprimeListVeiculos(int id){
+
             User p = this.estado.getUser(id);
             List<Veiculo> veiculos = ((Proprietario) p).getVeiculos();
             int i=0;
@@ -218,6 +226,7 @@ public class Main{
     }
 
         public  void imprimeListHistoricos( int id, List<Historico> list){
+
             User user = this.estado.getUser(id);
             int i=0;
             if(user instanceof Cliente){
@@ -242,8 +251,9 @@ public class Main{
             }
         }
     }
-    public  void imprimeListPedidos( List<Pedido> list){
-        int i=0;
+    public  void imprimeListPedidos( List<Pedido> list) throws PedidoNaoExisteException{
+        try{
+            int i=0;
         for(Pedido p: list){
             User c = this.estado.getUser(p.getIdCliente());
             System.out.println("(" + i +") " +"Cliente: " + c.getNome() +
@@ -252,6 +262,7 @@ public class Main{
                     "Destino: " +p.getDestino());
             i++;
         }
+        }catch (PedidoNaoExisteException e){System.out.println(" Pedido nao existe");}
     }
 
     public  void getTotalFaturado(int idUser, int idVeiculo, LocalDate begin, LocalDate end){
@@ -291,6 +302,7 @@ public class Main{
             System.out.println("1 - Solicitar viagem");
             System.out.println("2 - Visualizar Historico de viagens");
             System.out.println("3 - Classificar viagens");
+            System.out.println("4 - Guardar estado");
             System.out.println("Insira a sua opçao: ");
             Scanner sc = new Scanner(System.in);
             int sair = 1;
@@ -323,7 +335,14 @@ public class Main{
                         break;
                     default: System.out.println("Ação não conhecida");
                     break;
-            }
+
+                    case 4:
+                        this.grava();
+                        System.out.println("Estado guardado com sucesso");
+                        break;
+
+                }
+
 
         }while(sair == 1);
 }
@@ -577,49 +596,55 @@ public class Main{
                     System.out.println("Email ja existente. Tente de novo.");
                 }
             }
-            System.out.print("Nome: ");
-            String nome = sc.nextLine();
+            try {
+                System.out.print("Nome: ");
+                String nome = sc.nextLine();
 
-            System.out.print("Morada: ");
-            String morada = sc.nextLine();
+                System.out.print("Morada: ");
+                String morada = sc.nextLine();
 
-            System.out.print("Password: ");
-            String pass = sc.next();
+                System.out.print("Password: ");
+                String pass = sc.next();
 
-            System.out.println("Data de nascimento: (ano-mes-dia)\n");
-            String date = sc.nextLine();
-            LocalDate dataNascimento = LocalDate.parse(date);
+                System.out.println("Data de nascimento: (ano-mes-dia)");
+                String date = sc.next();
+                LocalDate dataNascimento = LocalDate.parse(date);
 
-            System.out.println("Pretende ser Proprietário de Veiculos(1) ou Cliente(2)?");
-            int resposta = sc.nextInt();
-            if(resposta ==1){
-                Integer id = this.estado.getTodosUsers().size();
-                Proprietario p = new Proprietario(id,email,nome,pass,morada,dataNascimento);
-                this.estado.addUser(p);
-                System.out.println("Utilizador criado com sucesso");
-                // Criar exceção para o caso de nao gravar novo user
+                System.out.println("Pretende ser Proprietário de Veiculos(1) ou Cliente(2)?");
+                int resposta = sc.nextInt();
+
+                if (resposta == 1) {
+                    Integer id = this.estado.getTodosUsers().size();
+                    Proprietario p = new Proprietario(id, email, nome, pass, morada, dataNascimento);
+                    this.estado.addUser(p);
+                    System.out.println("Utilizador criado com sucesso");
+                    // Criar exceção para o caso de nao gravar novo user
+
+                }
+
+                if (resposta == 2) {
+                    System.out.println("Indique a sua localização\n");
+                    System.out.println("Indique a sua posição X");
+                    Double x = sc.nextDouble();
+                    System.out.println("Indique a sua posição Y");
+                    Double y = sc.nextDouble();
+
+                    Integer id = this.estado.getTodosUsers().size();
+                    Cliente c = new Cliente(id, email, nome, pass, morada, dataNascimento, x, y);
+                    this.estado.addUser(c);
+                    System.out.println("Utilizador criado com sucesso");
+                }
 
             }
-
-            if(resposta ==2){
-                System.out.println("Indique a sua localização\n");
-                System.out.println("Indique a sua posição X");
-                Double x = sc.nextDouble();
-                System.out.println("Indique a sua posição Y");
-                Double y = sc.nextDouble();
-
-                Integer id = this.estado.getTodosUsers().size();
-                Cliente c = new Cliente(id,email,nome,pass,morada,dataNascimento,x,y);
-                this.estado.addUser(c);
-                System.out.println("Utilizador criado com sucesso");
+            catch (Exception e){
+                System.out.println(e.getMessage());
             }
-
-
 
         }
 
         public void loginMenu(){
 
+            try{
             Scanner sc = new Scanner(System.in);
             String email = "";
             boolean existe = false;
@@ -656,7 +681,11 @@ public class Main{
                 }
                 else System.out.println("Password errada");
             }
+            }
 
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }
 
 
@@ -727,7 +756,7 @@ public class Main{
         }
 
      */
-    public static UMCarroJa carregaEstado(String save){
+    public UMCarroJa carregaEstado(String save)throws FileNotFoundException, IOException, ClassNotFoundException{
         try{
             return UMCarroJa.loadEstado(save);
         }
@@ -753,12 +782,22 @@ public class Main{
         }
     }
     private void UMCarroJa() {
-
         Scanner sc = new Scanner(System.in);
+        System.out.println("(1) Carregar ficheiro logs ");
+        System.out.println("(2) Carregar ficheiro Base de dados ");
+
         try {
-            this.estado = UMCarroJa.importaCSV("logsPOO_carregamentoInicial.bak");
+            switch(getOption()) {
+                case 1:
+                    this.estado = UMCarroJa.importaCSV("logsPOO_carregamentoInicial.bak");
+                    break;
+
+                case 2:
+                    this.estado = carregaEstado("BaseDeDados");
+                    break;
+            }
         }
-        catch (FileNotFoundException e) {
+        catch (FileNotFoundException | ClassNotFoundException e) {
             System.out.println("Parece que é a primeira utilização...");
             this.estado = new UMCarroJa();
         }
@@ -768,13 +807,14 @@ public class Main{
         }
 
 
+
         System.out.println(estado);
 
         int menu = 0;
 
         do{
             System.out.println("O que pretende fazer?");
-            System.out.println("(1) Login  (2) Registo  (3) Sair da aplicação");
+            System.out.println("(1) Login  (2) Registo  (3) Sair da aplicação (4) Top 10 Users Por numero de vezes (5) Guardar estado");
 
             switch(getOption()){
                 case 1: this.loginMenu();
@@ -784,7 +824,16 @@ public class Main{
                     break;
 
                 case 3: menu = 3;
-                    // guarda tudo o que foi alterado
+
+                    break;
+
+                case 4: System.out.println(this.estado.top10UtilizadoresPorNrVezes());
+
+
+                    break;
+                case 5: menu = 3;
+                    this.grava();
+                    System.out.println("Estado guardado com sucesso");
                     break;
 
                 default: System.out.println("Ação não conhecida");

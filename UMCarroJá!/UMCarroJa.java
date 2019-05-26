@@ -1,6 +1,7 @@
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -9,7 +10,6 @@ import java.util.stream.Stream;
 public class UMCarroJa implements Serializable { // Vai ter o implements Comparator
     private Map<Integer, Pedido> viagens;
     private Map<Integer, User> users;
-    private Map<String, Veiculo> veiculos;
 
 
     public UMCarroJa() {
@@ -296,9 +296,9 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         User u = getUser(id);
         return u.getClassificacao().get(0);
     }
-    public int qualificacaoVeiculo(String matricula){
+    public double qualificacaoVeiculo(String matricula){
         Veiculo u = getVeiculoFromMatricula(matricula);
-        return u.getClassificacao().get(0);
+        return u.getMediaClassificacao();
     }
     public void geraPedido(int nifCliente, Ponto posicaoDestino, String tipoCombustivel, String prefere) {
 
@@ -500,9 +500,20 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         return (ArrayList<Veiculo>) disponiveis.stream().filter(v -> v.getAutonomia()>autonomia ).map(Veiculo::clone)
                 .collect(Collectors.toList());
     }
-    public List<Historico> verificaHistoricoNaoClassificado(int idCliente){
-        return (List<Historico>) getListHistoricos().stream().filter(v -> v.getIdCliente() == idCliente).map(Historico::clone);
+    public ArrayList<Historico> verificaHistoricoNaoClassificado(int idCliente){
 
+        return (ArrayList<Historico>) getListHistoricos().stream().filter(v -> v.getIdCliente() == idCliente).collect(Collectors.toList());
+    }
+    public Map<Integer, Long> top10UtilizadoresPorNrVezes(){
+         Map<Integer, Long>  l1 =  getListViagens().stream().collect(Collectors.groupingBy(Pedido::getIdCliente, Collectors.counting()));
+        Map<Integer, Long> result2 = new LinkedHashMap<>();
+         l1.entrySet().stream()
+                .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed()).limit(10)
+                .forEachOrdered(x -> result2.put(x.getKey(), x.getValue()));
+         return result2;
     }
 
+    public double distanciaPed(Pedido p){
+            return p.getDestino().distanceTo(p.getOrigem());
+    }
 }
