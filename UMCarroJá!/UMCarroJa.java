@@ -390,7 +390,6 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
                 v.setPrecoPorKm(preco);
             }
         }
-        System.out.println(veiculos);
         ((Proprietario) this.users.get(id)).setVeiculos(veiculos);
     }
 
@@ -409,7 +408,6 @@ public class UMCarroJa implements Serializable { // Vai ter o implements Compara
         }
 
         Historico h = new Historico(p, valorPago, dataViagem);
-        System.out.println(h);
         this.viagens.put(h.getIdPedido(), h);
     }
 
